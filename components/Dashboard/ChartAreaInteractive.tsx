@@ -18,14 +18,6 @@ import {
     ChartTooltipContent,
     type ChartConfig,
 } from "@/components/ui/chart";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 export const description = "An interactive area chart";
 
@@ -74,24 +66,10 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function ChartAreaInteractive() {
-    const isMobile = useIsMobile();
-    const [timeRange, setTimeRange] = React.useState("90d");
-
-    React.useEffect(() => {
-        if (isMobile) {
-            setTimeRange("7d");
-        }
-    }, [isMobile]);
-
     const filteredData = chartData.filter((item) => {
         const date = new Date(item.date);
         const referenceDate = new Date("2024-06-30");
-        let daysToSubtract = 90;
-        if (timeRange === "30d") {
-            daysToSubtract = 30;
-        } else if (timeRange === "7d") {
-            daysToSubtract = 7;
-        }
+        const daysToSubtract = 90;
         const startDate = new Date(referenceDate);
         startDate.setDate(startDate.getDate() - daysToSubtract);
         return date >= startDate;
@@ -100,52 +78,28 @@ export function ChartAreaInteractive() {
     return (
         <Card className="@container/card">
             <CardHeader>
-                <CardTitle>Total Visitors</CardTitle>
+                <CardTitle className="font-bold text-xl leading-[140%] text-[#e5e2e3]">
+                    Task Velocity Progress
+                </CardTitle>
                 <CardDescription>
-                    <span className="hidden @[540px]/card:block">
-                        Total for the last 3 months
-                    </span>
-                    <span className="@[540px]/card:hidden">Last 3 months</span>
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <span className="font-normal text-sm leading-[143%] text-slate-500">
+                                Momentum tracking over the current cycle
+                            </span>
+                        </div>
+                        <div className="flex items-center gap-4 font-bold text-xs leading-[133%] text-[#e5e2e3]">
+                            <div className="flex items-center gap-2">
+                                <div className="w-3 h-3 shadow-[0_0_8px_0_rgba(79,219,200,0.5)] bg-[#4fdbc8] rounded-full" />
+                                <p>Active</p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <div className="w-3 h-3 bg-slate-700 rounded-full" />
+                                <p>Projected</p>
+                            </div>
+                        </div>
+                    </div>
                 </CardDescription>
-                <CardAction>
-                    <ToggleGroup
-                        type="single"
-                        value={timeRange}
-                        onValueChange={setTimeRange}
-                        variant="outline"
-                        className="hidden *:data-[slot=toggle-group-item]:px-4! @[767px]/card:flex"
-                    >
-                        <ToggleGroupItem value="90d">
-                            Last 3 months
-                        </ToggleGroupItem>
-                        <ToggleGroupItem value="30d">
-                            Last 30 days
-                        </ToggleGroupItem>
-                        <ToggleGroupItem value="7d">
-                            Last 7 days
-                        </ToggleGroupItem>
-                    </ToggleGroup>
-                    <Select value={timeRange} onValueChange={setTimeRange}>
-                        <SelectTrigger
-                            className="flex w-40 **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate @[767px]/card:hidden"
-                            size="sm"
-                            aria-label="Select a value"
-                        >
-                            <SelectValue placeholder="Last 3 months" />
-                        </SelectTrigger>
-                        <SelectContent className="rounded-xl">
-                            <SelectItem value="90d" className="rounded-lg">
-                                Last 3 months
-                            </SelectItem>
-                            <SelectItem value="30d" className="rounded-lg">
-                                Last 30 days
-                            </SelectItem>
-                            <SelectItem value="7d" className="rounded-lg">
-                                Last 7 days
-                            </SelectItem>
-                        </SelectContent>
-                    </Select>
-                </CardAction>
             </CardHeader>
             <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
                 <ChartContainer
@@ -161,15 +115,11 @@ export function ChartAreaInteractive() {
                                 x2="0"
                                 y2="1"
                             >
+                                <stop stopColor="#334155" stopOpacity="0.3" />
                                 <stop
-                                    offset="5%"
-                                    stopColor="var(--color-desktop)"
-                                    stopOpacity={1.0}
-                                />
-                                <stop
-                                    offset="95%"
-                                    stopColor="var(--color-desktop)"
-                                    stopOpacity={0.1}
+                                    offset="1"
+                                    stopColor="#334155"
+                                    stopOpacity="0"
                                 />
                             </linearGradient>
                             <linearGradient
@@ -179,15 +129,11 @@ export function ChartAreaInteractive() {
                                 x2="0"
                                 y2="1"
                             >
+                                <stop stopColor="#4FDBC8" stopOpacity="0.3" />
                                 <stop
-                                    offset="5%"
-                                    stopColor="var(--color-mobile)"
-                                    stopOpacity={0.8}
-                                />
-                                <stop
-                                    offset="95%"
-                                    stopColor="var(--color-mobile)"
-                                    stopOpacity={0.1}
+                                    offset="1"
+                                    stopColor="#4FDBC8"
+                                    stopOpacity="0"
                                 />
                             </linearGradient>
                         </defs>
@@ -227,13 +173,15 @@ export function ChartAreaInteractive() {
                             type="natural"
                             fill="url(#fillMobile)"
                             stroke="var(--color-mobile)"
+                            strokeWidth={"2.6px"}
                             stackId="a"
                         />
                         <Area
                             dataKey="desktop"
                             type="natural"
                             fill="url(#fillDesktop)"
-                            stroke="var(--color-desktop)"
+                            stroke="#334166"
+                            strokeWidth={"2.6px"}
                             stackId="a"
                         />
                     </AreaChart>
