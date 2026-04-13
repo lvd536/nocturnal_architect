@@ -1,12 +1,9 @@
 "use client";
 
-import * as React from "react";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 
-import { useIsMobile } from "@/hooks/use-mobile";
 import {
     Card,
-    CardAction,
     CardContent,
     CardDescription,
     CardHeader,
@@ -76,7 +73,7 @@ export function ChartAreaInteractive() {
     });
 
     return (
-        <Card className="@container/card">
+        <Card className="@container/card col-span-2 border w-full h-112.5 backdrop-blur-xl bg-[rgba(53,52,54,0.4)] pt-8 pb-20 px-8 rounded-2xl border-solid border-[rgba(73,68,84,0.2)]">
             <CardHeader>
                 <CardTitle className="font-bold text-xl leading-[140%] text-[#e5e2e3]">
                     Task Velocity Progress
