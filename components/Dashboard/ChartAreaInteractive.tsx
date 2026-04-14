@@ -16,48 +16,43 @@ import {
     type ChartConfig,
 } from "@/components/ui/chart";
 
-export const description = "An interactive area chart";
-
 const chartData = [
-    { date: "2024-04-01", desktop: 222, mobile: 150 },
-    { date: "2024-04-02", desktop: 97, mobile: 180 },
-    { date: "2024-04-03", desktop: 167, mobile: 120 },
-    { date: "2024-04-04", desktop: 242, mobile: 260 },
-    { date: "2024-04-05", desktop: 373, mobile: 290 },
-    { date: "2024-04-06", desktop: 301, mobile: 340 },
-    { date: "2024-04-07", desktop: 245, mobile: 180 },
-    { date: "2024-04-08", desktop: 409, mobile: 320 },
-    { date: "2024-04-09", desktop: 59, mobile: 110 },
-    { date: "2024-04-10", desktop: 261, mobile: 190 },
-    { date: "2024-04-11", desktop: 327, mobile: 350 },
-    { date: "2024-04-12", desktop: 292, mobile: 210 },
-    { date: "2024-04-13", desktop: 342, mobile: 380 },
-    { date: "2024-04-14", desktop: 137, mobile: 220 },
-    { date: "2024-04-15", desktop: 120, mobile: 170 },
-    { date: "2024-04-16", desktop: 138, mobile: 190 },
-    { date: "2024-04-17", desktop: 446, mobile: 360 },
-    { date: "2024-04-18", desktop: 364, mobile: 410 },
-    { date: "2024-04-19", desktop: 243, mobile: 180 },
-    { date: "2024-04-20", desktop: 89, mobile: 150 },
-    { date: "2024-04-21", desktop: 137, mobile: 200 },
-    { date: "2024-04-22", desktop: 224, mobile: 170 },
-    { date: "2024-04-23", desktop: 138, mobile: 230 },
-    { date: "2024-09-24", desktop: 387, mobile: 290 },
-    { date: "2024-09-25", desktop: 215, mobile: 250 },
-    { date: "2024-09-26", desktop: 75, mobile: 130 },
-    { date: "2024-09-27", desktop: 383, mobile: 420 },
+    { date: "2024-04-01", actual: 222, projected: 150 },
+    { date: "2024-04-02", actual: 97, projected: 180 },
+    { date: "2024-04-03", actual: 167, projected: 120 },
+    { date: "2024-04-04", actual: 242, projected: 260 },
+    { date: "2024-04-05", actual: 373, projected: 290 },
+    { date: "2024-04-06", actual: 301, projected: 340 },
+    { date: "2024-04-07", actual: 245, projected: 180 },
+    { date: "2024-04-08", actual: 409, projected: 320 },
+    { date: "2024-04-09", actual: 59, projected: 110 },
+    { date: "2024-04-10", actual: 261, projected: 190 },
+    { date: "2024-04-11", actual: 327, projected: 350 },
+    { date: "2024-04-12", actual: 292, projected: 210 },
+    { date: "2024-04-13", actual: 342, projected: 380 },
+    { date: "2024-04-14", actual: 137, projected: 220 },
+    { date: "2024-04-15", actual: 120, projected: 170 },
+    { date: "2024-04-16", actual: 138, projected: 190 },
+    { date: "2024-04-17", actual: 446, projected: 360 },
+    { date: "2024-04-18", actual: 364, projected: 410 },
+    { date: "2024-04-19", actual: 243, projected: 180 },
+    { date: "2024-04-20", actual: 89, projected: 150 },
+    { date: "2024-04-21", actual: 137, projected: 200 },
+    { date: "2024-04-22", actual: 224, projected: 170 },
+    { date: "2024-04-23", actual: 138, projected: 230 },
+    { date: "2024-09-24", actual: 387, projected: 290 },
+    { date: "2024-09-25", actual: 215, projected: 250 },
+    { date: "2024-09-26", actual: 75, projected: 130 },
+    { date: "2024-09-27", actual: 383, projected: 420 },
 ];
 
 const chartConfig = {
-    visitors: {
-        label: "Visitors",
-    },
-    desktop: {
-        label: "Desktop",
+    actual: {
+        label: "Actual",
         color: "var(--primary)",
     },
-    mobile: {
-        label: "Mobile",
+    projected: {
+        label: "Projected",
         color: "var(--primary)",
     },
 } satisfies ChartConfig;
@@ -106,7 +101,7 @@ export function ChartAreaInteractive() {
                     <AreaChart data={filteredData}>
                         <defs>
                             <linearGradient
-                                id="fillDesktop"
+                                id="fillProjected"
                                 x1="0"
                                 y1="0"
                                 x2="0"
@@ -120,7 +115,7 @@ export function ChartAreaInteractive() {
                                 />
                             </linearGradient>
                             <linearGradient
-                                id="fillMobile"
+                                id="fillActual"
                                 x1="0"
                                 y1="0"
                                 x2="0"
@@ -165,19 +160,20 @@ export function ChartAreaInteractive() {
                                 />
                             }
                         />
+
                         <Area
-                            dataKey="mobile"
+                            dataKey="projected"
                             type="natural"
-                            fill="url(#fillMobile)"
-                            stroke="var(--color-mobile)"
+                            fill="url(#fillProjected)"
+                            stroke="#334166"
                             strokeWidth={"2.6px"}
                             stackId="a"
                         />
                         <Area
-                            dataKey="desktop"
+                            dataKey="actual"
                             type="natural"
-                            fill="url(#fillDesktop)"
-                            stroke="#334166"
+                            fill="url(#fillActual)"
+                            stroke="var(--color-actual)"
                             strokeWidth={"2.6px"}
                             stackId="a"
                         />
