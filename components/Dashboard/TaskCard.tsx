@@ -3,7 +3,6 @@ import {
     CANVAS_WIDTH,
     CARD_HEIGHT,
     CARD_WIDTH,
-    SNAP,
 } from "@/consts/todo.consts";
 import { Task } from "@/types/board.types";
 import { useEffect, useRef } from "react";
@@ -14,18 +13,36 @@ import {
     CardHeader,
     CardTitle,
 } from "../ui/card";
-import { Check, GripVertical, MoreHorizontal, Trash2 } from "lucide-react";
+import {
+    Check,
+    GripVertical,
+    MoreHorizontal,
+    Pencil,
+    Plus,
+    Trash2,
+} from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { formatTime } from "@/helpers/date.helpers";
+import { snap } from "@/helpers/math.helpers";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuPortal,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 function clamp(value: number, min: number, max: number) {
     return Math.min(Math.max(value, min), max);
-}
-
-function snap(value: number, step = SNAP) {
-    return Math.round(value / step) * step;
 }
 
 export function TaskCard({
@@ -112,14 +129,38 @@ export function TaskCard({
                         </div>
                     </div>
 
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-white/60 hover:bg-white/10 hover:text-white"
-                        onClick={() => onDelete(task.id)}
-                    >
-                        <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-9 w-9 text-white/60 hover:bg-white/10 hover:text-white"
+                            >
+                                <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-40" align="start">
+                            <DropdownMenuGroup>
+                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                <DropdownMenuItem
+                                    onClick={() => onDelete(task.id)}
+                                >
+                                    <Trash2 />
+                                    Delete
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    <Pencil />
+                                    Edit
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={() => onToggleDone(task.id)}
+                                >
+                                    <Check />
+                                    {task.done ? "Undone" : "Done"}
+                                </DropdownMenuItem>
+                            </DropdownMenuGroup>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -167,25 +208,13 @@ export function TaskCard({
                         </div>
                     ))}
 
-                <div className="flex items-center justify-between gap-3">
-                    <Button
-                        variant="secondary"
-                        size="sm"
-                        className="h-9 rounded-xl bg-white/10 text-white hover:bg-white/15"
-                        onClick={() => onToggleDone(task.id)}
-                    >
-                        <Check className="mr-2 h-4 w-4" />
-                        {task.done ? "Undone" : "Done"}
-                    </Button>
-
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-9 w-9 text-white/60 hover:bg-white/10 hover:text-white"
-                    >
-                        <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                </div>
+                <Button
+                    variant="default"
+                    className="flex items-center justify-center border w-full h-11.5 px-0 py-3 rounded-xl border-dashed border-[rgba(73,68,84,0.3)] hover:border-[rgba(73,68,84,0.5)] font-bold text-sm leading-[143%] text-center text-slate-500 bg-transparent!"
+                >
+                    <Plus />
+                    <p>Add Task</p>
+                </Button>
             </CardContent>
         </Card>
     );

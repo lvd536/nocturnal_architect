@@ -30,6 +30,7 @@ import {
 import { TaskCard } from "./TaskCard";
 import { useCanvasPan } from "@/hooks/useCanvasPan";
 import { cn } from "@/lib/utils";
+import { clamp } from "@/helpers/math.helpers";
 
 const initialTodos: Task[] = [
     {
@@ -77,10 +78,6 @@ const initialTodos: Task[] = [
     },
 ];
 
-function clamp(value: number, min: number, max: number) {
-    return Math.min(Math.max(value, min), max);
-}
-
 export default function CanvasBoard() {
     const canvasScrollRef = useRef<HTMLDivElement | null>(null);
     const surfaceRef = useRef<HTMLDivElement | null>(null);
@@ -97,7 +94,7 @@ export default function CanvasBoard() {
         containerRef: canvasScrollRef,
     });
 
-    const addTodo = useCallback(
+    const addTask = useCallback(
         (data: AddTask, position?: { x: number; y: number }) => {
             const title = data.title.trim();
             if (!title) return;
@@ -163,7 +160,7 @@ export default function CanvasBoard() {
             const y =
                 event.clientY - rect.top + scrollEl.scrollTop - CARD_HEIGHT / 2;
 
-            addTodo(
+            addTask(
                 {
                     title: form.title || "New task",
                     color: form.color || "#fff",
@@ -172,7 +169,7 @@ export default function CanvasBoard() {
                 { x, y },
             );
         },
-        [addTodo, form.color, form.title, form.done],
+        [addTask, form.color, form.title, form.done],
     );
 
     useEffect(() => {
@@ -313,7 +310,7 @@ export default function CanvasBoard() {
                                                 variant="ghost"
                                                 className="h-10 w-full justify-start rounded-2xl border border-white/10 bg-white/5 px-3 text-white/75 hover:bg-white/10 hover:text-white"
                                                 onClick={() =>
-                                                    addTodo({
+                                                    addTask({
                                                         title: item,
                                                         color: "#fff",
                                                         done: false,
