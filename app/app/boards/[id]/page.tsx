@@ -1,3 +1,5 @@
+import CanvasBoard from "@/components/Dashboard/CanvasBoard";
+
 export default function Boards() {
-    return <main className="w-full text-center">boards page</main>;
+    return <CanvasBoard />;
 }

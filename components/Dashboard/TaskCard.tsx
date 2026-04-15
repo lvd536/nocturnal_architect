@@ -18,6 +18,7 @@ import { Check, GripVertical, MoreHorizontal, Trash2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import { formatTime } from "@/helpers/date.helpers";
 
 function clamp(value: number, min: number, max: number) {
     return Math.min(Math.max(value, min), max);
@@ -25,15 +26,6 @@ function clamp(value: number, min: number, max: number) {
 
 function snap(value: number, step = SNAP) {
     return Math.round(value / step) * step;
-}
-
-function formatTime(date: string) {
-    return new Intl.DateTimeFormat("ru-RU", {
-        hour: "2-digit",
-        minute: "2-digit",
-        day: "2-digit",
-        month: "short",
-    }).format(new Date(date));
 }
 
 export function TaskCard({

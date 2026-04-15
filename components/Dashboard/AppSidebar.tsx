@@ -4,7 +4,6 @@ import * as React from "react";
 import {
     BrainCog,
     CalendarRange,
-    Camera,
     ChartColumn,
     ChartNoAxesCombined,
     LayoutDashboard,
@@ -33,27 +32,27 @@ const data = {
     navMain: [
         {
             title: "Dashboard",
-            url: "#",
+            url: "/app",
             icon: LayoutDashboard,
         },
         {
             title: "Project Boards",
-            url: "#",
+            url: "/app/boards/1/",
             icon: ChartColumn,
         },
         {
             title: "Team Hub",
-            url: "#",
+            url: "/app/boards/1/team",
             icon: UsersRound,
         },
         {
             title: "Timeline",
-            url: "#",
+            url: "/app/boards/1/calendar",
             icon: CalendarRange,
         },
         {
             title: "Analytics",
-            url: "#",
+            url: "/app/boards/1/stats",
             icon: ChartNoAxesCombined,
         },
     ],
