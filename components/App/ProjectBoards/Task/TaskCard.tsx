@@ -54,6 +54,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
+import TaskTagPicker from "./TaskTagPicker";
 
 export function TaskCard({
     task,
@@ -254,6 +255,7 @@ export function TaskCard({
                                     <Label className="font-bold text-[10px] leading-[150%] tracking-widest uppercase text-[#d0bcff]">
                                         {"Tags & Labels"}
                                     </Label>
+                                    <TaskTagPicker />
                                 </div>
                             </form>
                             <SheetFooter className="flex-row gap-4 items-center justify-between">
