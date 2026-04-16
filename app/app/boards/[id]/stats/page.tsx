@@ -1,6 +1,6 @@
-import { ChartAreaInteractive } from "@/components/Dashboard/ChartAreaInteractive";
-import { SectionCards } from "@/components/Dashboard/SectionCards";
-import { TagDistributionChart } from "@/components/Dashboard/TagDistributionChart";
+import { ChartAreaInteractive } from "@/components/App/Analytics/ChartAreaInteractive";
+import { SectionCards } from "@/components/App/Analytics/SectionCards";
+import { TagDistributionChart } from "@/components/App/Analytics/TagDistributionChart";
 
 export default function Stats() {
     return (

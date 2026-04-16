@@ -1,5 +1,5 @@
-import { AppSidebar } from "@/components/Dashboard/AppSidebar";
-import { SiteHeader } from "@/components/Dashboard/SiteHeader";
+import { AppSidebar } from "@/components/App/AppSidebar";
+import { SiteHeader } from "@/components/App/SiteHeader";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 

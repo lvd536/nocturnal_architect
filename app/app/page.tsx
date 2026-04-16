@@ -1,7 +1,7 @@
-import BoardCard from "@/components/Dashboard/Board";
-import CreateBoard from "@/components/Dashboard/CreateBoard";
+import BoardCard from "@/components/App/Dashboard/Board";
+import CreateBoard from "@/components/App/Dashboard/CreateBoard";
 import { Board } from "@/types/board.types";
-import { ArrowRight, CirclePlus } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 const data: Board[] = [
     {

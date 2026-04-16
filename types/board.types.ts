@@ -11,10 +11,12 @@ export type Task = {
     title: string;
     color: string;
     done: boolean;
+    dueDate: string;
     createdAt: string;
     x: number;
     y: number;
     todos: Todo[];
+    tags: TaskTag[];
 };
 
 export type Todo = {
@@ -26,6 +28,12 @@ export type Todo = {
     done: boolean;
     pinned: boolean;
     createdAt: string;
+};
+
+export type TaskTag = {
+    label: string;
+    bg: string;
+    text: string;
 };
 
 export type AddTask = Pick<Task, "title" | "color" | "done">;
