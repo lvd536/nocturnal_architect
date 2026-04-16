@@ -1,33 +1,12 @@
+"use server";
+
+import { getBoards } from "@/actions/supabase/board";
 import BoardCard from "@/components/App/Dashboard/Board";
 import CreateBoard from "@/components/App/Dashboard/CreateBoard";
-import { Board } from "@/types/board.types";
 import { ArrowRight } from "lucide-react";
 
-const data: Board[] = [
-    {
-        id: "board-1",
-        title: "Cyberpunk 2077 UI Redesign",
-        description: "Exploration of futuristic interfaces…",
-        createdAt: new Date().toISOString(),
-        tasks: [],
-    },
-    {
-        id: "board-2",
-        title: "E-Commerce Brand Identity",
-        description: "Developing a premium visual…",
-        createdAt: new Date().toISOString(),
-        tasks: [],
-    },
-    {
-        id: "board-3",
-        title: "board title",
-        description: "description",
-        createdAt: new Date().toISOString(),
-        tasks: [],
-    },
-];
-
-export default function App() {
+export default async function App() {
+    const data = await getBoards();
     return (
         <div className="px-4 lg:px-6">
             <div className="flex items-end justify-between">

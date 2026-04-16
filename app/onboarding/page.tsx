@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Stepper,
     StepperContent,
@@ -16,6 +16,7 @@ import IdentityForm from "@/components/Onboarding/IdentityForm";
 import CompanyForm from "@/components/Onboarding/CompanyForm";
 import FinishForm from "@/components/Onboarding/FinishForm";
 import { IOnboardingForm } from "@/types/form.types";
+import { onBoardUser } from "@/actions/supabase/auth";
 
 const steps = [
     {
@@ -43,6 +44,12 @@ export default function Onboarding() {
         companyBio: "",
     });
     const [currentStep, setCurrentStep] = useState(1);
+
+    useEffect(() => {
+        if (currentStep !== 3 || !formData.displayName || !formData.companyName)
+            return;
+        else onBoardUser(formData);
+    }, [currentStep, formData]);
 
     return (
         <Stepper

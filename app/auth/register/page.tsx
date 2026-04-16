@@ -1,4 +1,7 @@
 "use client";
+import { handleEmailAuth } from "@/actions/supabase/auth";
+import GitHubAuth from "@/components/Auth/GitHubAuth";
+import GoogleAuth from "@/components/Auth/GoogleAuth";
 import { Button } from "@/components/ui/button";
 
 import { Field, FieldLabel } from "@/components/ui/field";
@@ -8,8 +11,31 @@ import {
     InputGroupInput,
 } from "@/components/ui/input-group";
 import { Key, User } from "lucide-react";
+import { useState } from "react";
 
-export default function Login() {
+export default function Register() {
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const handleSubmit = async (e: FormData) => {
+        setLoading(true);
+        const { email, password, confirmPassword } = {
+            email: e.get("email"),
+            password: e.get("password"),
+            confirmPassword: e.get("confirmPassword"),
+        };
+
+        if (
+            !email ||
+            !password ||
+            !confirmPassword ||
+            password.toString().length < 6 ||
+            password !== confirmPassword
+        )
+            return;
+        await handleEmailAuth(e);
+        setLoading(false);
+    };
+
     return (
         <main className="flex flex-col items-center w-md h-fit max-w-md px-6 py-0 mx-auto mt-36">
             <svg
@@ -37,20 +63,16 @@ export default function Login() {
             <p className="font-normal text-sm leading-[143%] text-[#cbc3d7]">
                 Enter the collaborative void.
             </p>
-            <div className="border w-100 h-fit backdrop-blur-xl bg-[rgba(42,42,43,0.6)] pt-10 pb-8 px-8 rounded-2xl border-solid border-[rgba(233,221,255,0.2)] mt-8">
+            <div className="border w-100 h-fitbackdrop-blur-xl bg-[rgba(42,42,43,0.6)] pt-10 pb-8 px-8 rounded-2xl border-solid border-[rgba(233,221,255,0.2)] mt-8">
                 <h3 className="font-bold text-xl leading-[140%] text-[#e5e2e3]">
-                    Welcome back
+                    Hello!
                 </h3>
                 <p className="font-normal text-sm leading-[143%] text-[#cbc3d7] mb-6">
                     Please enter your credentials to proceed.
                 </p>
                 <div className="grid grid-cols-2">
-                    <Button className="border w-38.5 h-10.5 backdrop-blur-xl bg-[rgba(42,42,43,0.6)] px-8.25 py-2.5 rounded-xl border-solid border-[rgba(233,221,255,0.2)] font-semibold text-xs leading-[133%] tracking-wider uppercase text-center text-[#e5e2e3]">
-                        Google
-                    </Button>
-                    <Button className="border w-38.5 h-10.5 backdrop-blur-xl bg-[rgba(42,42,43,0.6)] px-8.25 py-2.5 rounded-xl border-solid border-[rgba(233,221,255,0.2)] font-semibold text-xs leading-[133%] tracking-wider uppercase text-center text-[#e5e2e3]">
-                        GitHub
-                    </Button>
+                    <GoogleAuth />
+                    <GitHubAuth />
                 </div>
                 <div className="flex items-center justify-center gap-4 my-8">
                     <div className="w-3/10 h-px border-t-[rgba(73,68,84,0.3)] border-t border-solid" />
@@ -62,7 +84,7 @@ export default function Login() {
 
                 <form
                     className="flex flex-col gap-2 w-full"
-                    action={(e) => console.log(e)}
+                    action={handleSubmit}
                 >
                     <Field className="max-w-sm w-full">
                         <FieldLabel
@@ -96,6 +118,7 @@ export default function Login() {
                                 id="password"
                                 name="password"
                                 type="password"
+                                minLength={6}
                                 placeholder="Enter your password"
                             />
                             <InputGroupAddon align="inline-start">
@@ -103,20 +126,41 @@ export default function Login() {
                             </InputGroupAddon>
                         </InputGroup>
                     </Field>
+                    <Field className="max-w-sm mt-5">
+                        <FieldLabel
+                            htmlFor="inline-start-input"
+                            className="font-semibold text-xs leading-[133%] tracking-widest uppercase text-[#d0bcff]"
+                        >
+                            confirm password
+                        </FieldLabel>
+                        <InputGroup className="flex items-center justify-start border! bg-[#0e0e0f]! pr-4 py-4 rounded-[8px]! h-12! w-full! border-solid border-[rgba(73,68,84,0.2)]">
+                            <InputGroupInput
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                type="password"
+                                minLength={6}
+                                placeholder="Confirm your password"
+                            />
+                            <InputGroupAddon align="inline-start">
+                                <Key className="text-muted-foreground" />
+                            </InputGroupAddon>
+                        </InputGroup>
+                    </Field>
                     <Button
+                        disabled={loading}
                         variant="outline"
                         className="w-full h-13 shadow-[0_0_20px_0_rgba(208,188,255,0.2)] bg-[#d0bcff]! px-8 py-3 rounded-lg font-bold text-sm leading-[143%] tracking-widest uppercase text-center text-[#3c0091] hover:text-indigo-600! mt-5"
                     >
-                        sign in to workspace
+                        enter to workspace
                     </Button>
                 </form>
             </div>
-            <a href="/register" className="flex gap-1.5 items-center mt-8">
+            <a href="/auth/login" className="flex gap-1.5 items-center mt-8">
                 <p className="font-medium text-sm leading-[143%] text-center text-[#cbc3d7]">
-                    Don&apos;t have an architect account?
+                    Already have an architect account?
                 </p>
                 <p className="font-bold text-sm leading-[143%] text-center text-[#4fdbc8]">
-                    Create account
+                    Login
                 </p>
             </a>
             {/* top left blick*/}
