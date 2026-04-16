@@ -1,3 +1,5 @@
+"use client";
+
 import { formatTime } from "@/helpers/date.helpers";
 import { Board } from "@/types/board.types";
 

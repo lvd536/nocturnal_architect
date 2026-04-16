@@ -18,17 +18,18 @@ export default function CompanyForm({ formData, setFormData }: IProps) {
             <div className="flex flex-col gap-2 w-full">
                 <Field className="max-w-sm w-full">
                     <FieldLabel
-                        htmlFor="inline-start-input"
+                        htmlFor="companyName"
                         className="font-semibold text-xs leading-[133%] tracking-widest uppercase text-[#d0bcff]"
                     >
                         company name
                     </FieldLabel>
                     <InputGroup className="flex items-center justify-start border! bg-[#0e0e0f]! pr-4 py-4 rounded-[8px]! h-12! w-full! md:w-9/10! border-solid border-[rgba(73,68,84,0.2)]">
                         <InputGroupInput
-                            id="inline-start-input"
+                            id="companyName"
                             type="text"
                             placeholder="Microsoft"
                             className="w-full!"
+                            required
                             value={formData.companyName}
                             onChange={(e) =>
                                 setFormData((prev) => ({
@@ -44,14 +45,14 @@ export default function CompanyForm({ formData, setFormData }: IProps) {
                 </Field>
                 <Field className="max-w-sm">
                     <FieldLabel
-                        htmlFor="inline-start-input"
+                        htmlFor="companyBio"
                         className="font-semibold text-xs leading-[133%] tracking-widest uppercase text-[#d0bcff]"
                     >
                         company bio
                     </FieldLabel>
                     <InputGroup className="flex items-center justify-start border! bg-[#0e0e0f]! pr-4 py-4 rounded-[8px]! h-12! w-full! md:w-9/10! border-solid border-[rgba(73,68,84,0.2)]">
                         <InputGroupInput
-                            id="inline-start-input"
+                            id="companyBio"
                             type="text"
                             placeholder="we dont support LGBTQ+"
                             value={formData.companyBio}

@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -14,23 +16,36 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CirclePlus } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
+import { createBoard } from "@/actions/supabase/board";
 
 export default function CreateBoard() {
+    const handleSubmit = async (e: FormData) => {
+        const { title, description } = {
+            title: e.get("board-name") || "",
+            description: e.get("board-description") || "",
+        };
+
+        console.log(title);
+        console.log(description);
+
+        await createBoard(title.toString(), description.toString());
+    };
+
     return (
         <Dialog>
-            <form>
-                <DialogTrigger>
-                    <div className="w-46.5 h-53 backdrop-blur-xl bg-[rgba(53,52,54,0.4)] p-6 rounded-xl border-2 border-dashed border-[rgba(73,68,84,0.3)]">
-                        <CirclePlus className="w-12 h-12 stroke-[#d0bcff] bg-[rgba(208,188,255,0.1)] rounded-full p-3 mx-auto" />
-                        <p className="font-bold text-lg leading-[156%] text-center text-[#e5e2e3] mt-4 mb-2">
-                            Create New Board
-                        </p>
-                        <p className="font-normal text-xs leading-[133%] text-center text-slate-500">
-                            Start a new creative journey
-                        </p>
-                    </div>
-                </DialogTrigger>
-                <DialogContent className="border backdrop-blur-xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] bg-[rgba(53,52,54,0.6)] p-6 rounded-3xl border-solid border-[rgba(73,68,84,0.2)]">
+            <DialogTrigger>
+                <div className="w-46.5 h-53 backdrop-blur-xl bg-[rgba(53,52,54,0.4)] p-6 rounded-xl border-2 border-dashed border-[rgba(73,68,84,0.3)]">
+                    <CirclePlus className="w-12 h-12 stroke-[#d0bcff] bg-[rgba(208,188,255,0.1)] rounded-full p-3 mx-auto" />
+                    <p className="font-bold text-lg leading-[156%] text-center text-[#e5e2e3] mt-4 mb-2">
+                        Create New Board
+                    </p>
+                    <p className="font-normal text-xs leading-[133%] text-center text-slate-500">
+                        Start a new creative journey
+                    </p>
+                </div>
+            </DialogTrigger>
+            <DialogContent className="border backdrop-blur-xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] bg-[rgba(53,52,54,0.6)] p-6 rounded-3xl border-solid border-[rgba(73,68,84,0.2)]">
+                <form action={handleSubmit}>
                     <DialogHeader>
                         <DialogTitle className="flex items-center gap-3">
                             <div className="rounded-full h-8 w-2 bg-[#d0bcff]" />
@@ -67,6 +82,7 @@ export default function CreateBoard() {
                             </FieldLabel>
                             <Textarea
                                 id="board-description"
+                                name="board-description"
                                 placeholder="Type board description."
                             />
                         </Field>
@@ -87,8 +103,8 @@ export default function CreateBoard() {
                             Save changes
                         </Button>
                     </DialogFooter>
-                </DialogContent>
-            </form>
+                </form>
+            </DialogContent>
         </Dialog>
     );
 }
