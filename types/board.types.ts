@@ -11,7 +11,7 @@ export type Task = {
     title: string;
     color: string;
     done: boolean;
-    dueDate: string;
+    dueDate: string | null;
     createdAt: string;
     x: number;
     y: number;
@@ -23,7 +23,7 @@ export type Todo = {
     id: string;
     title: string;
     description: string;
-    tag: string;
+    tag: string | null;
     order: number;
     done: boolean;
     pinned: boolean;
@@ -31,9 +31,21 @@ export type Todo = {
 };
 
 export type TaskTag = {
+    id?: string;
     label: string;
     bg: string;
     text: string;
 };
 
-export type AddTask = Pick<Task, "title" | "color" | "done">;
+export type AddTask = {
+    title: string;
+    color: string;
+    done: boolean;
+    dueDate?: string | null;
+};
+
+export interface AddTodo {
+    title: string;
+    description: string;
+    pinned: boolean;
+}
