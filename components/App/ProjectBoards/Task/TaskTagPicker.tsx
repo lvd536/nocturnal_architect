@@ -35,16 +35,18 @@ const TaskTagPicker = ({ value, onChange }: Props) => {
 
     return (
         <div className="flex flex-wrap items-center justify-start gap-2">
-            {value.map((tag) => (
-                <p
-                    key={`tag-${tag.label}`}
-                    className="border h-6.25 font-bold text-[10px] leading-[150%] tracking-wider uppercase pt-0.75 pb-1 px-3 rounded-full border-solid border-[rgba(208,188,255,0.2)] cursor-pointer"
-                    style={{ backgroundColor: tag.bg, color: tag.text }}
-                    onClick={() => removeTag(tag.label)}
-                >
-                    {tag.label}
-                </p>
-            ))}
+            {value &&
+                value.length > 0 &&
+                value.map((tag) => (
+                    <p
+                        key={`tag-${tag.label}`}
+                        className="border h-6.25 font-bold text-[10px] leading-[150%] tracking-wider uppercase pt-0.75 pb-1 px-3 rounded-full border-solid border-[rgba(208,188,255,0.2)] cursor-pointer"
+                        style={{ backgroundColor: tag.bg, color: tag.text }}
+                        onClick={() => removeTag(tag.label)}
+                    >
+                        {tag.label}
+                    </p>
+                ))}
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger>
                     <div className="flex items-center gap-1 h-6 bg-[#353436] font-bold text-[10px] text-center text-zinc-500 px-3 py-1 rounded-full cursor-pointer">

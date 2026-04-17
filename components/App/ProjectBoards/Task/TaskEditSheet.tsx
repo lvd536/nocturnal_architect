@@ -35,7 +35,7 @@ export function TaskEditSheet({ task, open, onOpenChange }: Props) {
     const [date, setDate] = useState<Date | undefined>(
         task.due_date ? new Date(task.due_date) : undefined,
     );
-    const [tags, setTags] = useState<TaskTag[]>(task.tags);
+    const [tags, setTags] = useState<TaskTag[]>(task.tags || []);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();

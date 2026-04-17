@@ -47,8 +47,8 @@ export async function createTask(
         x: task.x,
         y: task.y,
         done: task.done,
-        due_date: task.dueDate,
-        created_at: task.createdAt,
+        due_date: task.due_date,
+        created_at: task.created_at,
     });
 
     if (error) throw error;
@@ -108,7 +108,7 @@ export async function createTodo(taskId: string, todo: Todo): Promise<void> {
         pinned: todo.pinned,
         order_index: todo.order,
         tag: todo.tag,
-        created_at: todo.createdAt,
+        created_at: todo.created_at,
     });
 
     if (error) throw error;
