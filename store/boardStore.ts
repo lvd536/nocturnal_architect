@@ -33,13 +33,26 @@ interface BoardState {
         position?: { x: number; y: number },
     ) => Promise<void>;
     deleteTask: (id: string) => Promise<void>;
+
     toggleDone: (id: string) => Promise<void>;
+
     updatePosition: (id: string, x: number, y: number) => Promise<void>;
     updatePositionLocal: (id: string, x: number, y: number) => Promise<void>;
     updateTask: (id: string, patch: TaskPatch) => Promise<void>;
+
+    addTaskFromRemote: (newTask: Task) => void;
+    updateTaskFromRemote: (updatedTask: Task) => void;
+    deleteTaskFromRemote: (id: string) => void;
+
+    addTodoFromRemote: (taskId: string, newTodo: Todo) => void;
+    updateTodoFromRemote: (taskId: string, updatedTodo: Todo) => void;
+    deleteTodoFromRemote: (taskId: string, todoId: string) => void;
+
     addTodo: (taskId: string, data: AddTodo) => Promise<void>;
     deleteTodo: (taskId: string, todoId: string) => Promise<void>;
+
     setDraggingId: (id: string | null) => void;
+
     setBoardId: (boardId: string | null) => void;
     clearBoard: () => void;
 }
@@ -202,6 +215,73 @@ export const useBoardStore = create<BoardState>()(
 
             debouncedUpdateTask(id, apiPatch);
         },
+
+        addTaskFromRemote: (newTask: Task) =>
+            set((state) => ({
+                tasks: state.tasks.some((t) => t.id === newTask.id)
+                    ? state.tasks
+                    : [...state.tasks, newTask],
+            })),
+
+        updateTaskFromRemote: (updatedTask: Task) =>
+            set((state) => ({
+                tasks: state.tasks.map((t) =>
+                    t.id === updatedTask.id
+                        ? { ...t, ...updatedTask, todos: t.todos }
+                        : t,
+                ),
+            })),
+
+        deleteTaskFromRemote: (id: string) =>
+            set((state) => ({
+                tasks: state.tasks.filter((t) => t.id !== id),
+            })),
+
+        addTodoFromRemote: (taskId: string, newTodo: Todo) =>
+            set((state) => ({
+                tasks: state.tasks.map((t) =>
+                    t.id === taskId
+                        ? {
+                              ...t,
+                              todos: t.todos.some(
+                                  (todo) => todo.id === newTodo.id,
+                              )
+                                  ? t.todos
+                                  : [...t.todos, newTodo],
+                          }
+                        : t,
+                ),
+            })),
+
+        updateTodoFromRemote: (taskId: string, updatedTodo: Todo) =>
+            set((state) => ({
+                tasks: state.tasks.map((t) =>
+                    t.id === taskId
+                        ? {
+                              ...t,
+                              todos: t.todos.map((todo) =>
+                                  todo.id === updatedTodo.id
+                                      ? updatedTodo
+                                      : todo,
+                              ),
+                          }
+                        : t,
+                ),
+            })),
+
+        deleteTodoFromRemote: (taskId: string, todoId: string) =>
+            set((state) => ({
+                tasks: state.tasks.map((t) =>
+                    t.id === taskId
+                        ? {
+                              ...t,
+                              todos: t.todos.filter(
+                                  (todo) => todo.id !== todoId,
+                              ),
+                          }
+                        : t,
+                ),
+            })),
 
         addTodo: async (taskId, data) => {
             const taskIndex = get().tasks.findIndex((t) => t.id === taskId);
