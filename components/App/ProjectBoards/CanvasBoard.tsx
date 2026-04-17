@@ -15,13 +15,14 @@ import { useBoardStore } from "@/store/boardStore";
 import { useCanvasPan } from "@/hooks/useCanvasPan";
 import { TaskCard } from "@/components/App/ProjectBoards/Task/TaskCard";
 import CanvasBoardHelp from "./CanvasBoardHelp";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 export default function CanvasBoard() {
     const canvasScrollRef = useRef<HTMLDivElement | null>(null);
     const surfaceRef = useRef<HTMLDivElement | null>(null);
     const [isOverCanvas, setIsOverCanvas] = useState(false);
     const setBoardId = useBoardStore((s) => s.setBoardId);
+    const path = useParams();
     const router = useRouter();
 
     const tasks = useBoardStore((s) => s.tasks);
@@ -57,13 +58,12 @@ export default function CanvasBoard() {
     );
 
     useEffect(() => {
-        const segments = window.location.pathname.split("/");
-        const lastSegment = segments.pop();
-
-        if (!lastSegment) router.push("/");
-        else {
-            setBoardId(lastSegment);
-            console.log(lastSegment);
+        if (!path.id || typeof path.id !== "string") {
+            router.push("/");
+            return;
+        } else {
+            setBoardId(path.id);
+            useBoardStore.getState().loadTasks(path.id);
         }
 
         const surfaceEl = surfaceRef.current;

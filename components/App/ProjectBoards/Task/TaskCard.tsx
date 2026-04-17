@@ -77,14 +77,6 @@ export function TaskCard({ task, isDragging }: Props) {
         });
     }, [task.id, updatePosition, setDraggingId]);
 
-    useEffect(() => {
-        const segments = window.location.pathname.split("/");
-        const lastSegment = segments.pop();
-        if (!lastSegment) return;
-        console.log("load");
-        useBoardStore.getState().loadTasks(lastSegment);
-    }, []);
-
     return (
         <>
             <Card
