@@ -11,8 +11,9 @@ export type Task = {
     title: string;
     color: string;
     done: boolean;
-    dueDate: string | null;
-    createdAt: string;
+    due_date: string | null;
+    created_at?: string;
+    updated_at?: string;
     x: number;
     y: number;
     todos: Todo[];
@@ -28,7 +29,8 @@ export type Todo = {
     order: number;
     done: boolean;
     pinned: boolean;
-    createdAt: string;
+    created_at?: string;
+    updated_at?: string;
 };
 
 export type TaskTag = {

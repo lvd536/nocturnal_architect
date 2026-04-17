@@ -33,7 +33,7 @@ export function TaskEditSheet({ task, open, onOpenChange }: Props) {
     const updateTask = useBoardStore((s) => s.updateTask);
     const [title, setTitle] = useState(task.title);
     const [date, setDate] = useState<Date | undefined>(
-        task.dueDate ? new Date(task.dueDate) : undefined,
+        task.due_date ? new Date(task.due_date) : undefined,
     );
     const [tags, setTags] = useState<TaskTag[]>(task.tags);
 
@@ -42,7 +42,7 @@ export function TaskEditSheet({ task, open, onOpenChange }: Props) {
         if (!title.trim()) return;
         updateTask(task.id, {
             title: title.trim(),
-            dueDate: date ? date.toISOString() : (task.dueDate ?? undefined),
+            dueDate: date ? date.toISOString() : (task.due_date ?? undefined),
             tags,
         });
         onOpenChange(false);

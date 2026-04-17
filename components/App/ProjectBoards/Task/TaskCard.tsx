@@ -177,7 +177,7 @@ export function TaskCard({ task, isDragging }: Props) {
                                     {task.title}
                                 </CardTitle>
                                 <CardDescription className="text-xs text-white/45">
-                                    {formatTime(task.createdAt)}
+                                    {formatTime(task.created_at)}
                                 </CardDescription>
                             </div>
                         </div>

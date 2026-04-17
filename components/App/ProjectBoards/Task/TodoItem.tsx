@@ -73,7 +73,7 @@ export function TodoItem({ taskId, todo, index }: Props) {
                 {todo.description}
             </p>
             <p className="font-bold text-[10px] leading-[150%] uppercase text-slate-500 mt-6">
-                {formatTime(todo.createdAt)}
+                {formatTime(todo.created_at)}
             </p>
         </div>
     );

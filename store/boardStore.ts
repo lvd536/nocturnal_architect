@@ -125,8 +125,8 @@ export const useBoardStore = create<BoardState>()(
                 color: data.color || "#fff",
                 todos: [],
                 tags: [],
-                dueDate: now,
-                createdAt: now,
+                due_date: now,
+                created_at: now,
             };
 
             try {
@@ -300,7 +300,7 @@ export const useBoardStore = create<BoardState>()(
                 pinned: data.pinned,
                 order: task.todos.length + 1 || 0,
                 tag: "",
-                createdAt: now,
+                created_at: now,
             };
 
             try {
