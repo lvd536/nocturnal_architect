@@ -121,7 +121,7 @@ export function TaskCard({ task, isDragging }: Props) {
         updatePosition,
         updatePositionLocal,
         setDraggingId,
-        task.todos.length,
+        task.todos?.length,
     ]);
 
     useEffect(() => {

@@ -129,10 +129,6 @@ export const useBoardStore = create<BoardState>()(
                 createdAt: now,
             };
 
-            set((s) => {
-                s.tasks.push(task as Task);
-            });
-
             try {
                 await tasksService.createTask(boardId, task);
             } catch (error) {
@@ -302,14 +298,10 @@ export const useBoardStore = create<BoardState>()(
                 description: data.description,
                 done: false,
                 pinned: data.pinned,
-                order: task.todos.length + 1,
+                order: task.todos.length + 1 || 0,
                 tag: "",
                 createdAt: now,
             };
-
-            set((s) => {
-                s.tasks[taskIndex].todos.push(todo as Todo);
-            });
 
             try {
                 await tasksService.createTodo(taskId, todo as Todo);
