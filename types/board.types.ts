@@ -21,6 +21,7 @@ export type Task = {
 
 export type Todo = {
     id: string;
+    taskId: string;
     title: string;
     description: string;
     tag: string | null;

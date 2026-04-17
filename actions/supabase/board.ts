@@ -34,7 +34,10 @@ export async function fetchTasks(boardId: string): Promise<Task[]> {
     return data ?? [];
 }
 
-export async function createTask(boardId: string, task: Omit<Task, 'id'>): Promise<void> {
+export async function createTask(
+    boardId: string,
+    task: Omit<Task, "id">,
+): Promise<void> {
     const supabase = await createClient();
 
     const { error } = await supabase.from("tasks").insert({
@@ -125,4 +128,20 @@ export async function createBoard(title: string, description: string) {
     }
 
     return data;
+}
+
+export async function syncTodoOrderWithServer(
+    todoId: string,
+    targetTaskId: string,
+    newOrder: number,
+) {
+    const supabase = await createClient();
+
+    const { error } = await supabase.rpc("move_todo", {
+        p_todo_id: todoId,
+        p_target_task_id: targetTaskId,
+        p_new_order: newOrder,
+    });
+
+    if (error) throw new Error(error.message);
 }

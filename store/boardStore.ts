@@ -50,6 +50,12 @@ interface BoardState {
 
     addTodo: (taskId: string, data: AddTodo) => Promise<void>;
     deleteTodo: (taskId: string, todoId: string) => Promise<void>;
+    moveTodo: (
+        sourceTaskId: string,
+        targetTaskId: string,
+        todoId: string,
+        targetIndex: number,
+    ) => void;
 
     setDraggingId: (id: string | null) => void;
 
@@ -291,6 +297,7 @@ export const useBoardStore = create<BoardState>()(
             const now = new Date().toISOString();
 
             const todo: Omit<Todo, "id"> = {
+                taskId,
                 title: data.title,
                 description: data.description,
                 done: false,
@@ -326,6 +333,58 @@ export const useBoardStore = create<BoardState>()(
             } catch (error) {
                 console.error(error);
             }
+        },
+
+        moveTodo: (
+            sourceTaskId: string,
+            targetTaskId: string,
+            todoId: string,
+            targetIndex: number,
+        ) => {
+            set((state) => {
+                const sourceTask = state.tasks.find(
+                    (t) => t.id === sourceTaskId,
+                );
+                const targetTask = state.tasks.find(
+                    (t) => t.id === targetTaskId,
+                );
+
+                if (!sourceTask || !targetTask) return state;
+
+                const todoToMove = sourceTask.todos.find(
+                    (todo) => todo.id === todoId,
+                );
+                if (!todoToMove) return state;
+
+                const newTasks = state.tasks.map((task) => {
+                    if (task.id === sourceTaskId) {
+                        const updatedTodos = task.todos.filter(
+                            (todo) => todo.id !== todoId,
+                        );
+
+                        if (sourceTaskId === targetTaskId) {
+                            const finalTodos = [...updatedTodos];
+                            finalTodos.splice(targetIndex, 0, todoToMove);
+                            return { ...task, todos: finalTodos };
+                        }
+
+                        return { ...task, todos: updatedTodos };
+                    }
+
+                    if (task.id === targetTaskId) {
+                        const updatedTodos = [...task.todos];
+                        updatedTodos.splice(targetIndex, 0, {
+                            ...todoToMove,
+                            taskId: targetTaskId,
+                        });
+                        return { ...task, todos: updatedTodos };
+                    }
+
+                    return task;
+                });
+
+                return { tasks: newTasks };
+            });
         },
 
         setDraggingId: (id) =>

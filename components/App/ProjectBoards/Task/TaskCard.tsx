@@ -10,7 +10,10 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import {
+    draggable,
+    dropTargetForElements,
+} from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { formatTime } from "@/helpers/date.helpers";
 import { clamp, snap } from "@/helpers/math.helpers";
 import {
@@ -26,6 +29,9 @@ import { TaskEditSheet } from "./TaskEditSheet";
 import { AddTodoSheet } from "./AddTodoSheet";
 import { TodoItem } from "./TodoItem";
 import { useShallow } from "zustand/react/shallow";
+import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import { syncTodoOrderWithServer } from "@/actions/supabase/board";
+import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 
 interface Props {
     task: Task;
@@ -42,6 +48,7 @@ export function TaskCard({ task, isDragging }: Props) {
         updatePosition,
         updatePositionLocal,
         setDraggingId,
+        moveTodo,
     } = useBoardStore(
         useShallow((s) => ({
             deleteTask: s.deleteTask,
@@ -49,6 +56,7 @@ export function TaskCard({ task, isDragging }: Props) {
             updatePosition: s.updatePosition,
             updatePositionLocal: s.updatePositionLocal,
             setDraggingId: s.setDraggingId,
+            moveTodo: s.moveTodo,
         })),
     );
 
@@ -64,40 +72,81 @@ export function TaskCard({ task, isDragging }: Props) {
         const el = ref.current;
         if (!el) return;
 
-        return draggable({
-            element: el,
-            getInitialData: () => ({ kind: "task", id: task.id }),
-            onDragStart: ({ location }) => {
-                const card = latestTaskRef.current;
-                dragOffsetRef.current = {
-                    x: location.current.input.clientX - card.x,
-                    y: location.current.input.clientY - card.y,
-                };
-                setDraggingId(task.id);
-            },
-            onDrag: ({ location }) => {
-                const { x, y } = dragOffsetRef.current;
-                const nextX = snap(location.current.input.clientX - x);
-                const nextY = snap(location.current.input.clientY - y);
-                updatePositionLocal(
-                    task.id,
-                    clamp(nextX, 0, CANVAS_WIDTH - CARD_WIDTH),
-                    clamp(nextY, 0, CANVAS_HEIGHT - CARD_HEIGHT),
-                );
-            },
-            onDrop: ({ location }) => {
-                setDraggingId(null);
-                const { x, y } = dragOffsetRef.current;
-                const nextX = snap(location.current.input.clientX - x);
-                const nextY = snap(location.current.input.clientY - y);
-                updatePosition(
-                    task.id,
-                    clamp(nextX, 0, CANVAS_WIDTH - CARD_WIDTH),
-                    clamp(nextY, 0, CANVAS_HEIGHT - CARD_HEIGHT),
-                );
+        return combine(
+            draggable({
+                element: el,
+                getInitialData: () => ({ kind: "task", id: task.id }),
+                onDragStart: ({ location }) => {
+                    const card = latestTaskRef.current;
+                    dragOffsetRef.current = {
+                        x: location.current.input.clientX - card.x,
+                        y: location.current.input.clientY - card.y,
+                    };
+                    setDraggingId(task.id);
+                },
+                onDrag: ({ location }) => {
+                    const { x, y } = dragOffsetRef.current;
+                    const nextX = snap(location.current.input.clientX - x);
+                    const nextY = snap(location.current.input.clientY - y);
+                    updatePositionLocal(
+                        task.id,
+                        clamp(nextX, 0, CANVAS_WIDTH - CARD_WIDTH),
+                        clamp(nextY, 0, CANVAS_HEIGHT - CARD_HEIGHT),
+                    );
+                },
+                onDrop: ({ location }) => {
+                    setDraggingId(null);
+                    const { x, y } = dragOffsetRef.current;
+                    const nextX = snap(location.current.input.clientX - x);
+                    const nextY = snap(location.current.input.clientY - y);
+                    updatePosition(
+                        task.id,
+                        clamp(nextX, 0, CANVAS_WIDTH - CARD_WIDTH),
+                        clamp(nextY, 0, CANVAS_HEIGHT - CARD_HEIGHT),
+                    );
+                },
+            }),
+            dropTargetForElements({
+                element: el,
+                getData: () => ({
+                    type: "task",
+                    taskId: task.id,
+                    index: task.todos.length,
+                }),
+                canDrop: ({ source }) => source.data.type === "todo",
+            }),
+        );
+    }, [
+        task.id,
+        updatePosition,
+        updatePositionLocal,
+        setDraggingId,
+        task.todos.length,
+    ]);
+
+    useEffect(() => {
+        return monitorForElements({
+            onDrop({ location, source }) {
+                const target = location.current.dropTargets[0];
+                if (!target) return;
+
+                const sourceData = source.data;
+                const targetData = target.data;
+
+                if (sourceData.type === "todo") {
+                    const todoId = sourceData.todoId as string;
+                    const sourceTaskId = sourceData.taskId as string;
+                    const targetTaskId = targetData.taskId as string;
+                    const targetIndex = targetData.index as number;
+
+                    if (sourceData.todoId === targetData.todoId) return;
+
+                    moveTodo(sourceTaskId, targetTaskId, todoId, targetIndex);
+                    syncTodoOrderWithServer(todoId, targetTaskId, targetIndex);
+                }
             },
         });
-    }, [task.id, updatePosition, updatePositionLocal, setDraggingId]);
+    }, []);
 
     return (
         <>
@@ -169,13 +218,16 @@ export function TaskCard({ task, isDragging }: Props) {
                 </CardHeader>
 
                 <CardContent className="space-y-4 pt-0">
-                    {task.todos.map((todo, index) => (
-                        <TodoItem
-                            key={`task-${task.id || index}-todo-${todo.id || index}`}
-                            taskId={task.id}
-                            todo={todo}
-                        />
-                    ))}
+                    {task.todos &&
+                        task.todos.length > 0 &&
+                        task.todos.map((todo, index) => (
+                            <TodoItem
+                                key={`task-${task.id || index}-todo-${todo.id || index}`}
+                                taskId={task.id}
+                                todo={todo}
+                                index={index}
+                            />
+                        ))}
 
                     <Button
                         variant="default"

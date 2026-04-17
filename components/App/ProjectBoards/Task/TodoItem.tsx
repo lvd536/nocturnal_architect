@@ -2,14 +2,47 @@ import { Trash2 } from "lucide-react";
 import { Todo } from "@/types/board.types";
 import { formatTime } from "@/helpers/date.helpers";
 import { useBoardStore } from "@/store/boardStore";
+import { useEffect, useRef } from "react";
+import {
+    draggable,
+    dropTargetForElements,
+} from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 
 interface Props {
     taskId: string;
     todo: Todo;
+    index: number;
 }
 
-export function TodoItem({ taskId, todo }: Props) {
+export function TodoItem({ taskId, todo, index }: Props) {
+    const ref = useRef(null);
     const deleteTodo = useBoardStore((s) => s.deleteTodo);
+
+    useEffect(() => {
+        const element = ref.current;
+        if (!element) return;
+        return combine(
+            draggable({
+                element,
+                getInitialData: () => ({
+                    type: "todo",
+                    todoId: todo.id,
+                    taskId,
+                    index,
+                }),
+            }),
+            dropTargetForElements({
+                element,
+                getData: () => ({
+                    type: "todo",
+                    todoId: todo.id,
+                    taskId,
+                    index,
+                }),
+            }),
+        );
+    }, [taskId, todo.id, index]);
 
     return (
         <div
@@ -18,6 +51,7 @@ export function TodoItem({ taskId, todo }: Props) {
                     ? "group shadow-[0_0_20px_0_rgba(208,188,255,0.15)] bg-[#201f20] p-4 rounded-lg border-2 border-solid border-[#d0bcff]"
                     : "group border bg-[#1c1b1c] p-4 rounded-lg border-solid border-[rgba(73,68,84,0.1)]"
             }
+            ref={ref}
         >
             {todo.pinned && (
                 <p className="border w-18.25 h-5.25 bg-[rgba(208,188,255,0.2)] px-2 py-0.5 rounded-full border-solid border-[rgba(208,188,255,0.3)] font-bold text-[10px] leading-[150%] tracking-widest uppercase text-[#d0bcff]">
