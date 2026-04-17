@@ -16,19 +16,25 @@ import { useCanvasPan } from "@/hooks/useCanvasPan";
 import { TaskCard } from "@/components/App/ProjectBoards/Task/TaskCard";
 import CanvasBoardHelp from "./CanvasBoardHelp";
 import { useParams, useRouter } from "next/navigation";
+import { useShallow } from "zustand/react/shallow";
 
 export default function CanvasBoard() {
     const canvasScrollRef = useRef<HTMLDivElement | null>(null);
     const surfaceRef = useRef<HTMLDivElement | null>(null);
     const [isOverCanvas, setIsOverCanvas] = useState(false);
-    const setBoardId = useBoardStore((s) => s.setBoardId);
     const path = useParams();
     const router = useRouter();
 
-    const tasks = useBoardStore((s) => s.tasks);
-    const draggingId = useBoardStore((s) => s.draggingId);
-    const addTask = useBoardStore((s) => s.addTask);
-    const setDraggingId = useBoardStore((s) => s.setDraggingId);
+    const { tasks, draggingId, addTask, setDraggingId, setBoardId } =
+        useBoardStore(
+            useShallow((s) => ({
+                tasks: s.tasks,
+                draggingId: s.draggingId,
+                addTask: s.addTask,
+                setDraggingId: s.setDraggingId,
+                setBoardId: s.setBoardId,
+            })),
+        );
 
     const { isPanning, panHandlers } = useCanvasPan({
         containerRef: canvasScrollRef,

@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import { nanoid } from "nanoid";
-import { Task, AddTask, AddTodo, TaskTag } from "@/types/board.types";
+import { Task, AddTask, AddTodo, TaskTag, Todo } from "@/types/board.types";
 import { clamp } from "@/helpers/math.helpers";
 import {
     CANVAS_HEIGHT,
@@ -10,6 +9,7 @@ import {
     CARD_WIDTH,
 } from "@/consts/todo.consts";
 import * as tasksService from "@/actions/supabase/board";
+import { debounce } from "lodash";
 
 type TaskPatch = Partial<{
     title: string;
@@ -35,6 +35,7 @@ interface BoardState {
     deleteTask: (id: string) => Promise<void>;
     toggleDone: (id: string) => Promise<void>;
     updatePosition: (id: string, x: number, y: number) => Promise<void>;
+    updatePositionLocal: (id: string, x: number, y: number) => Promise<void>;
     updateTask: (id: string, patch: TaskPatch) => Promise<void>;
     addTodo: (taskId: string, data: AddTodo) => Promise<void>;
     deleteTodo: (taskId: string, todoId: string) => Promise<void>;
@@ -42,6 +43,14 @@ interface BoardState {
     setBoardId: (boardId: string | null) => void;
     clearBoard: () => void;
 }
+
+const debouncedUpdateTask = debounce(async (id: string, patch: TaskPatch) => {
+    try {
+        await tasksService.updateTask(id, patch);
+    } catch (error) {
+        console.error("API Update Error:", error);
+    }
+}, 1500);
 
 export const useBoardStore = create<BoardState>()(
     immer((set, get) => ({
@@ -158,18 +167,21 @@ export const useBoardStore = create<BoardState>()(
             }
         },
 
+        updatePositionLocal: async (id, x, y) => {
+            set((s) => {
+                const task = s.tasks.find((t) => t.id === id);
+                if (task) {
+                    task.x = x;
+                    task.y = y;
+                }
+            });
+        },
+
         updateTask: async (id, patch) => {
             set((s) => {
                 const task = s.tasks.find((t) => t.id === id);
                 if (!task) return;
-
-                if (patch.title !== undefined) task.title = patch.title;
-                if (patch.dueDate !== undefined) task.dueDate = patch.dueDate;
-                if (patch.color !== undefined) task.color = patch.color;
-                if (patch.done !== undefined) task.done = patch.done;
-                if (patch.tags !== undefined) task.tags = patch.tags;
-                if (patch.x !== undefined) task.x = patch.x;
-                if (patch.y !== undefined) task.y = patch.y;
+                Object.assign(task, patch);
             });
 
             const apiPatch: Partial<{
@@ -188,11 +200,7 @@ export const useBoardStore = create<BoardState>()(
             if (patch.y !== undefined) apiPatch.y = patch.y;
             if (patch.color !== undefined) apiPatch.color = patch.color;
 
-            try {
-                await tasksService.updateTask(id, apiPatch);
-            } catch (error) {
-                console.error(error);
-            }
+            debouncedUpdateTask(id, apiPatch);
         },
 
         addTodo: async (taskId, data) => {
@@ -202,8 +210,7 @@ export const useBoardStore = create<BoardState>()(
             const task = get().tasks[taskIndex];
             const now = new Date().toISOString();
 
-            const todo = {
-                id: nanoid(),
+            const todo: Omit<Todo, "id"> = {
                 title: data.title,
                 description: data.description,
                 done: false,
@@ -214,11 +221,11 @@ export const useBoardStore = create<BoardState>()(
             };
 
             set((s) => {
-                s.tasks[taskIndex].todos.push(todo);
+                s.tasks[taskIndex].todos.push(todo as Todo);
             });
 
             try {
-                await tasksService.createTodo(taskId, todo);
+                await tasksService.createTodo(taskId, todo as Todo);
             } catch (error) {
                 console.error(error);
             }

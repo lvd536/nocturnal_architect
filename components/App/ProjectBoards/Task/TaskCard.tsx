@@ -25,6 +25,7 @@ import { TaskDropdownMenu } from "./TaskDropdownMenu";
 import { TaskEditSheet } from "./TaskEditSheet";
 import { AddTodoSheet } from "./AddTodoSheet";
 import { TodoItem } from "./TodoItem";
+import { useShallow } from "zustand/react/shallow";
 
 interface Props {
     task: Task;
@@ -35,10 +36,21 @@ export function TaskCard({ task, isDragging }: Props) {
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [isAddTodoOpen, setIsAddTodoOpen] = useState(false);
 
-    const deleteTask = useBoardStore((s) => s.deleteTask);
-    const toggleDone = useBoardStore((s) => s.toggleDone);
-    const updatePosition = useBoardStore((s) => s.updatePosition);
-    const setDraggingId = useBoardStore((s) => s.setDraggingId);
+    const {
+        deleteTask,
+        toggleDone,
+        updatePosition,
+        updatePositionLocal,
+        setDraggingId,
+    } = useBoardStore(
+        useShallow((s) => ({
+            deleteTask: s.deleteTask,
+            toggleDone: s.toggleDone,
+            updatePosition: s.updatePosition,
+            updatePositionLocal: s.updatePositionLocal,
+            setDraggingId: s.setDraggingId,
+        })),
+    );
 
     const ref = useRef<HTMLDivElement | null>(null);
     const latestTaskRef = useRef(task);
@@ -67,15 +79,25 @@ export function TaskCard({ task, isDragging }: Props) {
                 const { x, y } = dragOffsetRef.current;
                 const nextX = snap(location.current.input.clientX - x);
                 const nextY = snap(location.current.input.clientY - y);
+                updatePositionLocal(
+                    task.id,
+                    clamp(nextX, 0, CANVAS_WIDTH - CARD_WIDTH),
+                    clamp(nextY, 0, CANVAS_HEIGHT - CARD_HEIGHT),
+                );
+            },
+            onDrop: ({ location }) => {
+                setDraggingId(null);
+                const { x, y } = dragOffsetRef.current;
+                const nextX = snap(location.current.input.clientX - x);
+                const nextY = snap(location.current.input.clientY - y);
                 updatePosition(
                     task.id,
                     clamp(nextX, 0, CANVAS_WIDTH - CARD_WIDTH),
                     clamp(nextY, 0, CANVAS_HEIGHT - CARD_HEIGHT),
                 );
             },
-            onDrop: () => setDraggingId(null),
         });
-    }, [task.id, updatePosition, setDraggingId]);
+    }, [task.id, updatePosition, updatePositionLocal, setDraggingId]);
 
     return (
         <>
@@ -147,8 +169,12 @@ export function TaskCard({ task, isDragging }: Props) {
                 </CardHeader>
 
                 <CardContent className="space-y-4 pt-0">
-                    {task.todos.map((todo) => (
-                        <TodoItem key={todo.id} taskId={task.id} todo={todo} />
+                    {task.todos.map((todo, index) => (
+                        <TodoItem
+                            key={`task-${task.id || index}-todo-${todo.id || index}`}
+                            taskId={task.id}
+                            todo={todo}
+                        />
                     ))}
 
                     <Button
