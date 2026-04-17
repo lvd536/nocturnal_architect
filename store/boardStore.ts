@@ -229,7 +229,7 @@ export const useBoardStore = create<BoardState>()(
             set((state) => ({
                 tasks: state.tasks.map((t) =>
                     t.id === updatedTask.id
-                        ? { ...t, ...updatedTask, todos: t.todos }
+                        ? { ...t, ...updatedTask, todos: t.todos ?? [] }
                         : t,
                 ),
             })),
@@ -245,23 +245,49 @@ export const useBoardStore = create<BoardState>()(
                     t.id === taskId
                         ? {
                               ...t,
-                              todos: t.todos.some(
+                              todos: t.todos?.some(
                                   (todo) => todo.id === newTodo.id,
                               )
-                                  ? t.todos
-                                  : [...t.todos, newTodo],
+                                  ? t.todos || []
+                                  : [...[t.todos ?? []], newTodo],
                           }
                         : t,
                 ),
             })),
 
-        updateTodoFromRemote: (taskId: string, updatedTodo: Todo) =>
+        updateTodoFromRemote: (newTaskId: string, updatedTodo: Todo) =>
+            set((state) => {
+                const cleanedTasks = state.tasks.map((t) => ({
+                    ...t,
+                    todos:
+                        t.todos?.filter((todo) => todo.id !== updatedTodo.id) ||
+                        [],
+                }));
+
+                return {
+                    tasks: cleanedTasks.map((t) =>
+                        t.id === newTaskId
+                            ? {
+                                  ...t,
+                                  todos:
+                                      [...t.todos, updatedTodo]?.sort(
+                                          (a, b) =>
+                                              (a.order_index ?? 0) -
+                                              (b.order_index ?? 0),
+                                      ) || [],
+                              }
+                            : t,
+                    ),
+                };
+            }),
+
+        updateTodoFromRemotes: (taskId: string, updatedTodo: Todo) =>
             set((state) => ({
                 tasks: state.tasks.map((t) =>
                     t.id === taskId
                         ? {
                               ...t,
-                              todos: t.todos.map((todo) =>
+                              todos: t.todos?.map((todo) =>
                                   todo.id === updatedTodo.id
                                       ? updatedTodo
                                       : todo,
@@ -277,9 +303,10 @@ export const useBoardStore = create<BoardState>()(
                     t.id === taskId
                         ? {
                               ...t,
-                              todos: t.todos.filter(
-                                  (todo) => todo.id !== todoId,
-                              ),
+                              todos:
+                                  t.todos?.filter(
+                                      (todo) => todo.id !== todoId,
+                                  ) || [],
                           }
                         : t,
                 ),
@@ -298,7 +325,7 @@ export const useBoardStore = create<BoardState>()(
                 description: data.description,
                 done: false,
                 pinned: data.pinned,
-                order: task.todos.length + 1 || 0,
+                order_index: task.todos?.length + 1 || 0,
                 tag: "",
                 created_at: now,
             };
@@ -313,7 +340,7 @@ export const useBoardStore = create<BoardState>()(
         deleteTodo: async (_taskId, todoId) => {
             set((s) => {
                 const task = s.tasks.find((t) =>
-                    t.todos.some((td) => td.id === todoId),
+                    t.todos?.some((td) => td.id === todoId),
                 );
                 if (!task) return;
 

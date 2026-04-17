@@ -26,7 +26,7 @@ export type Todo = {
     title: string;
     description: string;
     tag: string | null;
-    order: number;
+    order_index: number;
     done: boolean;
     pinned: boolean;
     created_at?: string;

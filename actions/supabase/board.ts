@@ -106,7 +106,7 @@ export async function createTodo(taskId: string, todo: Todo): Promise<void> {
         description: todo.description,
         done: todo.done,
         pinned: todo.pinned,
-        order_index: todo.order,
+        order_index: todo.order_index,
         tag: todo.tag,
         created_at: todo.created_at,
     });

@@ -60,7 +60,7 @@ export function RealtimeSync() {
                         );
                     if (payload.eventType === "DELETE") {
                         const taskId = tasks.find((t) =>
-                            t.todos.some((todo) => todo.id === payload.old.id),
+                            t.todos?.some((todo) => todo.id === payload.old.id),
                         )?.id;
                         if (taskId)
                             deleteTodoFromRemote(taskId, payload.old.id);

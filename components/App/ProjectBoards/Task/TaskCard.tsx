@@ -111,7 +111,7 @@ export function TaskCard({ task, isDragging }: Props) {
                 getData: () => ({
                     type: "task",
                     taskId: task.id,
-                    index: task.todos.length,
+                    index: task.todos?.length,
                 }),
                 canDrop: ({ source }) => source.data.type === "todo",
             }),
