@@ -4,6 +4,8 @@ import { createClient } from "./utils/supabase/server";
 
 export async function proxy(request: NextRequest) {
     const supabase = await createClient();
+    const url = new URL(request.url);
+    const pathname = url.pathname;
 
     const {
         data: { user },
@@ -19,11 +21,20 @@ export async function proxy(request: NextRequest) {
 
     const { data: userData } = await supabase
         .from("profiles")
-        .select("id")
+        .select("id, display_name")
         .eq("id", user.id)
         .maybeSingle();
 
     if (!userData) {
+        if (pathname === "/onboarding") return NextResponse.next();
+        return NextResponse.redirect(new URL("/onboarding", request.url));
+    }
+
+    if (userData.display_name && pathname === "/onboarding") {
+        return NextResponse.redirect(new URL("/app", request.url));
+    }
+
+    if (!userData.display_name && pathname !== "/onboarding") {
         return NextResponse.redirect(new URL("/onboarding", request.url));
     }
 
@@ -31,5 +42,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/app/:path*"],
+    matcher: ["/app/:path*", "/onboarding"],
 };
