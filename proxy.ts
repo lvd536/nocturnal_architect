@@ -10,7 +10,7 @@ export async function proxy(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     if (!user) {
-        return NextResponse.redirect(new URL("/", request.url));
+        return NextResponse.redirect(new URL("/auth/login", request.url));
     }
 
     if (!user.confirmed_at) {
