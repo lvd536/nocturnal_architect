@@ -30,6 +30,9 @@ export function NavUser({
 }) {
     const { isMobile } = useSidebar();
 
+    const get2Digits = (str: string) =>
+        str.length > 0 ? str.slice(0, 2) : str;
+
     return (
         <SidebarMenu>
             <SidebarMenuItem>
@@ -44,8 +47,11 @@ export function NavUser({
                                     src={user.avatar}
                                     alt={user.name}
                                 />
-                                <AvatarFallback className="rounded-lg">
-                                    CN
+                                <AvatarFallback className="rounded-lg uppercase text-xs">
+                                    {get2Digits(user.email) ||
+                                        get2Digits(user.name) ||
+                                        get2Digits(user.email) ||
+                                        "U"}
                                 </AvatarFallback>
                             </Avatar>
                             <div className="grid flex-1 text-left text-sm leading-tight">

@@ -1,13 +1,32 @@
+"use server";
+
 import { AppSidebar } from "@/components/App/AppSidebar";
 import { SiteHeader } from "@/components/App/SiteHeader";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 
-export default function AppLayout({
+export default async function AppLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const supabase = await createClient();
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) redirect("/auth/login");
+
+    const { data: userData } = await supabase
+        .from("profiles")
+        .select("display_name")
+        .eq("id", user.id)
+        .maybeSingle();
+
+    if (!userData) redirect("/info/error");
+
     return (
         <TooltipProvider>
             <SidebarProvider
@@ -18,7 +37,14 @@ export default function AppLayout({
                     } as React.CSSProperties
                 }
             >
-                <AppSidebar variant="inset" />
+                <AppSidebar
+                    user={{
+                        name: userData.display_name,
+                        email: user.email || "",
+                        avatar: user.user_metadata.avatar_url || "",
+                    }}
+                    variant="inset"
+                />
                 <SidebarInset>
                     <SiteHeader />
                     <div className="flex flex-1 flex-col">
