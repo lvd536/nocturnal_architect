@@ -1,3 +1,5 @@
+import { IUserProfile } from "./user.types";
+
 export type Board = {
     id: string;
     title: string;
@@ -51,4 +53,13 @@ export interface AddTodo {
     title: string;
     description: string;
     pinned: boolean;
+}
+
+export interface BoardMember {
+    id: string;
+    board_id: string;
+    user_id: string;
+    role: string;
+    created_at: string;
+    profiles: IUserProfile;
 }
