@@ -1,4 +1,4 @@
-import { Button } from "../ui/button";
+import GetStartedBtn from "./GetStartedBtn";
 
 export default function LandingJoin() {
     return (
@@ -14,9 +14,7 @@ export default function LandingJoin() {
                 Join 500+ forward-thinking teams using Nocturnal Architect to
                 define their future.
             </p>
-            <Button className="py-4 px-6 lg:py-6 lg:px-8 bg-[#d0bcff] shadow-[0_0_20px_0_rgba(208,188,255,0.3)] font-bold leading-6 text-center text-[#3c0091]">
-                Get Started Free
-            </Button>
+            <GetStartedBtn />
         </div>
     );
 }

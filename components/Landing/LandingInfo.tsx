@@ -1,4 +1,4 @@
-import { Button } from "../ui/button";
+import GetStartedBtn from "./GetStartedBtn";
 
 export default function LandingInfo() {
     return (
@@ -12,9 +12,7 @@ export default function LandingInfo() {
                 Experience atmospheric productivity. A high-fidelity workspace
                 designed for deep focus and seamless real-time collaboration.
             </p>
-            <Button className="py-6 px-8 bg-[#d0bcff] shadow-[0_0_20px_0_rgba(208,188,255,0.3)] font-bold leading-6 text-center text-[#3c0091]">
-                Get Started Free
-            </Button>
+            <GetStartedBtn />
         </div>
     );
 }
