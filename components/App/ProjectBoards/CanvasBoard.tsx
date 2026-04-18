@@ -15,7 +15,7 @@ import { useBoardStore } from "@/store/boardStore";
 import { useCanvasPan } from "@/hooks/useCanvasPan";
 import { TaskCard } from "@/components/App/ProjectBoards/Task/TaskCard";
 import CanvasBoardHelp from "./CanvasBoardHelp";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useShallow } from "zustand/react/shallow";
 
 export default function CanvasBoard() {
@@ -23,7 +23,6 @@ export default function CanvasBoard() {
     const surfaceRef = useRef<HTMLDivElement | null>(null);
     const [isOverCanvas, setIsOverCanvas] = useState(false);
     const path = useParams();
-    const router = useRouter();
 
     const { tasks, draggingId, addTask, setDraggingId, boardId } =
         useBoardStore(
@@ -65,7 +64,6 @@ export default function CanvasBoard() {
 
     useEffect(() => {
         if (!boardId && !path.id) {
-            router.push("/app");
             return;
         }
 
