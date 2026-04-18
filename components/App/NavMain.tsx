@@ -21,18 +21,7 @@ export function NavMain({
     return (
         <SidebarGroup>
             <SidebarGroupContent className="flex flex-col gap-2">
-                <SidebarMenu>
-                    <SidebarMenuItem className="mx-auto w-full">
-                        <SidebarMenuButton
-                            tooltip="Quick Create"
-                            className="flex items-center justify-center w-full bg-[#d0bcff] h-11 font-bold text-sm leading-[143%] text-center text-[#3c0091] px-4 py-3 rounded-xl transition-colors duration-300 hover:bg-[#f1bffd] hover:text-[#3c0091]"
-                        >
-                            <Plus />
-                            <span>New project</span>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-                <SidebarMenu className="mt-8 flex flex-col gap-1">
+                <SidebarMenu className="mt-2 flex flex-col gap-1">
                     {items.map((item, index) => (
                         <SidebarMenuItem key={item.title}>
                             <SidebarMenuButton
