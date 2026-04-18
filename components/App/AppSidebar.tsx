@@ -33,43 +33,6 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
     user: SidebarUser;
 }
 
-const data = {
-    navMain: [
-        {
-            title: "Dashboard",
-            url: "/app",
-            icon: LayoutDashboard,
-        },
-        {
-            title: "Project Boards",
-            url: "/app/boards/1/",
-            icon: ChartColumn,
-        },
-        {
-            title: "Team Hub",
-            url: "/app/boards/1/team",
-            icon: UsersRound,
-        },
-        {
-            title: "Timeline",
-            url: "/app/boards/1/calendar",
-            icon: CalendarRange,
-        },
-        {
-            title: "Analytics",
-            url: "/app/boards/1/stats",
-            icon: ChartNoAxesCombined,
-        },
-    ],
-    navSecondary: [
-        {
-            title: "Settings",
-            url: "#",
-            icon: Settings,
-        },
-    ],
-};
-
 export function AppSidebar({ user, ...props }: AppSidebarProps) {
     return (
         <Sidebar collapsible="offcanvas" {...props}>
@@ -91,7 +54,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                 </SidebarMenu>
             </SidebarHeader>
             <SidebarContent>
-                <NavMain items={data.navMain} />
+                <NavMain />
             </SidebarContent>
             <SidebarFooter>
                 <NavUser user={user} />
