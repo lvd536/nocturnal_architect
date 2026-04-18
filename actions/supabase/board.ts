@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { Task, Todo } from "@/types/board.types";
+import { BoardMember, Task, Todo } from "@/types/board.types";
 
 export async function getBoards() {
     const supabase = await createClient();
@@ -144,4 +144,55 @@ export async function syncTodoOrderWithServer(
     });
 
     if (error) throw new Error(error.message);
+}
+
+export async function fetchBoardMembers(
+    boardId: string,
+): Promise<BoardMember[]> {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+        .from("board_members")
+        .select(
+            `
+            *,
+            profiles(*)
+        `,
+        )
+        .eq("board_id", boardId);
+
+    if (error) {
+        console.error(error);
+        throw error;
+    }
+
+    return data ?? [];
+}
+
+export async function upsertInviteLink(
+    boardId: string,
+    token: string,
+    role: string,
+) {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase.rpc("create_invite_link", {
+        p_board_id: boardId,
+        p_token: token,
+        p_role: role,
+    });
+
+    if (error) throw error;
+    return data;
+}
+
+export async function handleUserInvite(token: string) {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase.rpc("accept_board_invite", {
+        p_token: token,
+    });
+
+    if (error) return { error };
+    return data as object;
 }
