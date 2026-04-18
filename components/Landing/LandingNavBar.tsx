@@ -162,6 +162,7 @@ export default function LandingNavBar() {
                     </DropdownMenu>
                 ) : (
                     <Button
+                        onClick={() => router.push("/auth/login")}
                         variant="default"
                         className="rounded-full bg-[#D0BCFF] hover:bg-[#b8a2e6] text-[#2D2345] text-xs font-bold px-6 h-9 shadow-[0_0_15px_rgba(208,188,255,0.3)]"
                     >
