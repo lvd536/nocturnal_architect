@@ -81,6 +81,7 @@ export const useBoardStore = create<BoardState>()(
         setBoardId: (boardId) => set({ boardId }),
 
         loadTasks: async (boardId: string) => {
+            console.log("loadtasks woth bid:", boardId);
             set((s) => {
                 s.isLoading = true;
                 s.boardId = boardId;

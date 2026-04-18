@@ -25,14 +25,14 @@ export default function CanvasBoard() {
     const path = useParams();
     const router = useRouter();
 
-    const { tasks, draggingId, addTask, setDraggingId, setBoardId } =
+    const { tasks, draggingId, addTask, setDraggingId, boardId } =
         useBoardStore(
             useShallow((s) => ({
                 tasks: s.tasks,
                 draggingId: s.draggingId,
                 addTask: s.addTask,
                 setDraggingId: s.setDraggingId,
-                setBoardId: s.setBoardId,
+                boardId: s.boardId,
             })),
         );
 
@@ -64,13 +64,12 @@ export default function CanvasBoard() {
     );
 
     useEffect(() => {
-        if (!path.id || typeof path.id !== "string") {
-            router.push("/");
+        if (!boardId && !path.id) {
+            router.push("/app");
             return;
-        } else {
-            setBoardId(path.id);
-            useBoardStore.getState().loadTasks(path.id);
         }
+
+        useBoardStore.getState().loadTasks(boardId || (path.id as string));
 
         const surfaceEl = surfaceRef.current;
         if (!surfaceEl) return;

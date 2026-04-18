@@ -1,6 +1,7 @@
 "use client";
 
 import { formatTime } from "@/helpers/date.helpers";
+import { useBoardStore } from "@/store/boardStore";
 import { Board } from "@/types/board.types";
 
 interface IProps {
@@ -8,10 +9,13 @@ interface IProps {
 }
 
 export default function BoardCard({ board }: IProps) {
+    const setBoardId = useBoardStore((s) => s.setBoardId);
+
     return (
         <a
             className="flex flex-col ityems-center justify-between order w-46.5 backdrop-blur-xl bg-[rgba(53,52,54,0.4)] p-5 rounded-xl border-solid border-[rgba(73,68,84,0.2)]"
             href={`/app/boards/${board.id}`}
+            onClick={() => setBoardId(board.id)}
         >
             <h1 className="font-bold text-lg leading-[156%] text-[#e5e2e3]">
                 {board.title}
