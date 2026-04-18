@@ -34,10 +34,10 @@ export async function signInWithOAuth(provider: "google" | "github") {
     const supabase = await createClient();
     const origin = (await headers()).get("origin");
 
-    const { error } = await supabase.auth.signInWithOAuth({
+    const { data, error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-            redirectTo: `${origin}/auth/callback`,
+            redirectTo: `${origin}/auth/callback?next=/onboarding`,
         },
     });
 
@@ -46,7 +46,11 @@ export async function signInWithOAuth(provider: "google" | "github") {
         redirect("/error");
     }
 
-    redirect("/onboarding");
+    if (data?.url) {
+        redirect(data.url);
+    }
+
+    redirect("/error");
 }
 
 export async function onBoardUser(form: IOnboardingForm) {
