@@ -20,7 +20,7 @@ export default function BoardCard({ board }: IProps) {
                 {board.description}
             </p>
             <p className="font-bold text-[10px] leading-[150%] tracking-widest uppercase text-slate-500">
-                {formatTime(board.createdAt)}
+                {formatTime(board.created_at)}
             </p>
         </a>
     );
