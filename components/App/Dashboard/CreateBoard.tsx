@@ -24,10 +24,7 @@ export default function CreateBoard() {
             title: e.get("board-name") || "",
             description: e.get("board-description") || "",
         };
-
-        console.log(title);
-        console.log(description);
-
+        
         await createBoard(title.toString(), description.toString());
     };
 

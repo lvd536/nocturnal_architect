@@ -128,4 +128,44 @@
     html {
         @apply font-inter;
     }
+    .fc {
+        --fc-border-color: rgba(255, 255, 255, 0.05);
+        --fc-page-bg-color: transparent;
+        --fc-today-bg-color: transparent;
+        @apply border-[color:var(--fc-border-color)];
+    }
+    .fc .fc-col-header-cell {
+        @apply text-left text-[#64748b] text-xs font-semibold tracking-widest uppercase pt-4 pb-6 px-4 border-[none];
+    }
+    .fc-daygrid-day {
+        @apply h-full;
+    }
+    .fc-theme-standard td,
+    .fc-theme-standard th {
+        @apply border-[color:var(--fc-border-color)];
+    }
+    .fc-daygrid-day {
+        @apply h-45 max-h-45;
+    }
+    .fc-daygrid-day-frame {
+        @apply flex flex-col relative cursor-pointer transition-[background-color] duration-200 p-2 hover:bg-[rgba(255,255,255,0.02)];
+    }
+    .fc .fc-daygrid-day-top {
+        @apply block grow opacity-100;
+    }
+    .fc-daygrid-day-number {
+        @apply block w-full h-full no-underline p-0;
+    }
+    .fc-daygrid-day-events {
+        @apply flex flex-col gap-0.5 absolute z-10 m-0 left-2 bottom-2;
+    }
+    .fc-h-event {
+        @apply bg-transparent shadow-none border-[none];
+    }
+    .fc-daygrid-event-harness {
+        @apply m-0;
+    }
+    .selected-day .fc-daygrid-day-frame {
+        @apply backdrop-blur-md shadow-[0_0_20px_0_rgba(208,188,255,0.1),inset_0_0_15px_1px_rgba(208,188,255,0.15)] bg-[rgba(208,188,255,0.05)];
+    }
 }
