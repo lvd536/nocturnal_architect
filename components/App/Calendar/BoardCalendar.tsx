@@ -16,6 +16,7 @@ import {
     DayCellContentArg,
     EventContentArg,
 } from "@fullcalendar/core/index.js";
+import TaskCreationModal from "../ProjectBoards/Task/TaskCreationModal";
 
 export default function CalendarBoard() {
     const calendarRef = useRef<FullCalendar>(null);
@@ -124,10 +125,7 @@ export default function CalendarBoard() {
                         Today
                     </Button>
                 </div>
-                <Button className="w-28.5 h-9.5">
-                    <Plus />
-                    Add Task
-                </Button>
+                <TaskCreationModal />
             </header>
 
             <div className="flex-1 flex flex-col lg:flex-row gap-6 min-h-0">
