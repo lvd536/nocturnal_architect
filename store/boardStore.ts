@@ -259,7 +259,24 @@ export const useBoardStore = create<BoardState>()(
 
             updateTodoFromRemote: (newTaskId: string, updatedTodo: Todo) =>
                 set((state) => {
-                    const cleanedTasks = state.tasks.map((t) => ({
+                    const { tasks } = state;
+                    const task = tasks.find((t) => t.id === newTaskId);
+
+                    if (!tasks || !task || !updatedTodo) return;
+                    else if (!task.todos || task.todos.length < 1) {
+                        return {
+                            tasks: tasks.map((t) =>
+                                t.id === newTaskId
+                                    ? {
+                                          ...t,
+                                          todos: [updatedTodo],
+                                      }
+                                    : t,
+                            ),
+                        };
+                    }
+
+                    const cleanedTasks = tasks.map((t) => ({
                         ...t,
                         todos:
                             t.todos?.filter(
@@ -273,7 +290,7 @@ export const useBoardStore = create<BoardState>()(
                                 ? {
                                       ...t,
                                       todos:
-                                          [...t.todos, updatedTodo]?.sort(
+                                          [...t.todos, updatedTodo].sort(
                                               (a, b) =>
                                                   (a.order_index ?? 0) -
                                                   (b.order_index ?? 0),
@@ -283,22 +300,6 @@ export const useBoardStore = create<BoardState>()(
                         ),
                     };
                 }),
-
-            updateTodoFromRemotes: (taskId: string, updatedTodo: Todo) =>
-                set((state) => ({
-                    tasks: state.tasks.map((t) =>
-                        t.id === taskId
-                            ? {
-                                  ...t,
-                                  todos: t.todos?.map((todo) =>
-                                      todo.id === updatedTodo.id
-                                          ? updatedTodo
-                                          : todo,
-                                  ),
-                              }
-                            : t,
-                    ),
-                })),
 
             deleteTodoFromRemote: (taskId: string, todoId: string) =>
                 set((state) => ({
