@@ -17,6 +17,7 @@ import { TaskCard } from "@/components/App/ProjectBoards/Task/TaskCard";
 import CanvasBoardHelp from "./CanvasBoardHelp";
 import { useParams } from "next/navigation";
 import { useShallow } from "zustand/react/shallow";
+import BoardMenu from "./BoardMenu";
 
 export default function CanvasBoard() {
     const canvasScrollRef = useRef<HTMLDivElement | null>(null);
@@ -131,6 +132,7 @@ export default function CanvasBoard() {
                             </div>
                         </div>
                         <CanvasBoardHelp addTask={addTask} />
+                        <BoardMenu />
                     </div>
                 </div>
             </div>

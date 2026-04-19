@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { nanoid } from "nanoid";
 import { Copy, UserPlus, Shield, Eye, Check } from "lucide-react";
 import {
@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { upsertInviteLink } from "@/actions/supabase/board";
 import { useBoardStore } from "@/store/boardStore";
 
-export function InviteModal() {
+export function InviteModal({ children }: React.PropsWithChildren) {
     const [inviteCode, setInviteCode] = useState("");
     const [role, setRole] = useState<"editor" | "viewer">("editor");
     const [copied, setCopied] = useState(false);
@@ -45,9 +45,13 @@ export function InviteModal() {
     return (
         <Dialog onOpenChange={handleOpenChange}>
             <DialogTrigger asChild>
-                <Button className="fixed w-11 h-11 shrink-0 bottom-10 right-10 bg-[#2dd4bf] hover:bg-[#2dd4bf]/90 text-black font-bold">
-                    <UserPlus size={20} />
-                </Button>
+                {children ? (
+                    children
+                ) : (
+                    <Button className="fixed w-11 h-11 shrink-0 bottom-10 right-10 bg-[#2dd4bf] hover:bg-[#2dd4bf]/90 text-black font-bold">
+                        <UserPlus size={20} />
+                    </Button>
+                )}
             </DialogTrigger>
 
             <DialogContent className="sm:max-w-110 bg-[#1a191b] border-white/10 text-white shadow-2xl">

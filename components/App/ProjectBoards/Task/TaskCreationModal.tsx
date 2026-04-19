@@ -59,7 +59,7 @@ export default function TaskCreationModal({
         <Dialog>
             <DialogTrigger asChild>
                 {children ? (
-                    <>{children}</>
+                    children
                 ) : (
                     <Button className="w-28.5 h-9.5">
                         <Plus />
