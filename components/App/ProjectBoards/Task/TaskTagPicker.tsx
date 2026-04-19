@@ -14,23 +14,35 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { TaskTag } from "@/types/board.types";
-import { TASK_TAGS } from "@/consts/todo.consts";
+import { Tag, TaskTag } from "@/types/board.types";
+import { useBoardTags } from "@/hooks/useBoardTags";
+import { addTaskTag } from "@/actions/supabase/board";
 
 interface Props {
     value: TaskTag[];
     onChange: (tags: TaskTag[]) => void;
+    taskId: string;
 }
 
-const TaskTagPicker = ({ value, onChange }: Props) => {
+const TaskTagPicker = ({ value, onChange, taskId }: Props) => {
     const [open, setOpen] = useState(false);
+    const { tags: boardTags } = useBoardTags();
+    const removeTag = (tagId: string) => {
+        onChange(value.filter((t) => t.tag_id !== tagId));
+    };
 
-    const removeTag = (label: string) =>
-        onChange(value.filter((t) => t.label !== label));
+    const addTag = async (tag: Tag) => {
+        const nextTag: TaskTag = {
+            task_id: taskId,
+            tag_id: tag.id,
+            tags: tag,
+            created_at: new Date().toISOString(),
+        };
 
-    const addTag = (tag: TaskTag) => {
-        onChange([...value, tag]);
+        onChange([...value, nextTag]);
         setOpen(false);
+
+        await addTaskTag(taskId, tag.id);
     };
 
     return (
@@ -39,12 +51,17 @@ const TaskTagPicker = ({ value, onChange }: Props) => {
                 value.length > 0 &&
                 value.map((tag) => (
                     <p
-                        key={`tag-${tag.label}`}
+                        key={`tag-${tag.tags?.label}`}
                         className="border h-6.25 font-bold text-[10px] leading-[150%] tracking-wider uppercase pt-0.75 pb-1 px-3 rounded-full border-solid border-[rgba(208,188,255,0.2)] cursor-pointer"
-                        style={{ backgroundColor: tag.bg, color: tag.text }}
-                        onClick={() => removeTag(tag.label)}
+                        style={{
+                            backgroundColor: tag.tags?.bg,
+                            color: tag.tags?.text_color,
+                        }}
+                        onClick={() => {
+                            removeTag(tag.tag_id);
+                        }}
                     >
-                        {tag.label}
+                        {tag.tags?.label}
                     </p>
                 ))}
             <Popover open={open} onOpenChange={setOpen}>
@@ -63,20 +80,29 @@ const TaskTagPicker = ({ value, onChange }: Props) => {
                         <CommandList>
                             <CommandEmpty>No tag found.</CommandEmpty>
                             <CommandGroup>
-                                {TASK_TAGS.filter(
-                                    (tag) =>
-                                        !value.some(
-                                            (t) => t.label === tag.label,
-                                        ),
-                                ).map((tag) => (
-                                    <CommandItem
-                                        key={tag.label}
-                                        value={tag.label}
-                                        onSelect={() => addTag(tag)}
-                                    >
-                                        {tag.label}
-                                    </CommandItem>
-                                ))}
+                                {boardTags &&
+                                    boardTags.length > 0 &&
+                                    boardTags
+                                        .filter(
+                                            (tag) =>
+                                                !value.some(
+                                                    (t) => t.tag_id === tag.id,
+                                                ),
+                                        )
+                                        .map((tag, index) => (
+                                            <CommandItem
+                                                key={`${tag.id}-${index}`}
+                                                value={tag.label}
+                                                className="border w-fit h-6.25 font-bold text-[10px] leading-[150%] tracking-wider uppercase pt-0.75 pb-1 px-3 rounded-full border-solid border-[rgba(208,188,255,0.2)] cursor-pointer"
+                                                style={{
+                                                    backgroundColor: tag.bg,
+                                                    color: tag.text_color,
+                                                }}
+                                                onSelect={() => addTag(tag)}
+                                            >
+                                                {tag.label}
+                                            </CommandItem>
+                                        ))}
                             </CommandGroup>
                         </CommandList>
                     </Command>

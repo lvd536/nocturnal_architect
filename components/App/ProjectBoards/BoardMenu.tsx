@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { BookType, Tag, Users } from "lucide-react";
 import { InviteModal } from "../TeamHub/InviteModal";
 import TaskCreationModal from "./Task/TaskCreationModal";
+import TagCreationModal from "./TagCreationModal";
 
 export default function BoardMenu() {
     return (
@@ -24,9 +25,14 @@ export default function BoardMenu() {
                 </Button>
             </InviteModal>
 
-            <Button variant="ghost" className="shrink-0 rounded-full h-13 w-13">
-                <Tag className="min-w-6 min-h-6" />
-            </Button>
+            <TagCreationModal>
+                <Button
+                    variant="ghost"
+                    className="shrink-0 rounded-full h-13 w-13"
+                >
+                    <Tag className="min-w-6 min-h-6" />
+                </Button>
+            </TagCreationModal>
         </div>
     );
 }

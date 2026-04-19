@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { BoardMember, Task, Todo } from "@/types/board.types";
+import { BoardMember, Tag, Task, Todo } from "@/types/board.types";
 
 export async function getBoards() {
     const supabase = await createClient();
@@ -195,4 +195,58 @@ export async function handleUserInvite(token: string) {
 
     if (error) return { error };
     return data as object;
+}
+
+export async function createTag(tag: Omit<Tag, "id" | "created_at">) {
+    const supabase = await createClient();
+
+    const { error } = await supabase.from("tags").insert(tag);
+
+    if (error) {
+        console.log(error);
+        throw error;
+    }
+}
+export async function fetchBoardTags(boardId: string) {
+    const supabase = await createClient();
+
+    const { error, data } = await supabase
+        .from("tags")
+        .select("*")
+        .eq("board_id", boardId);
+
+    if (error) {
+        console.log(error);
+        throw error;
+    }
+
+    return data || [];
+}
+export async function fetchTaskTags(taskId: string) {
+    const supabase = await createClient();
+
+    const { error, data } = await supabase
+        .from("task_tags")
+        .select("*, tasks(board_id), tags(*)")
+        .eq("task_id", taskId);
+
+    if (error) {
+        console.log(error);
+        throw error;
+    }
+
+    return data || [];
+}
+export async function addTaskTag(task_id: string, tag_id: string) {
+    const supabase = await createClient();
+
+    const { error } = await supabase.from("task_tags").insert({
+        task_id,
+        tag_id,
+    });
+
+    if (error) {
+        console.log(error);
+        throw error;
+    }
 }

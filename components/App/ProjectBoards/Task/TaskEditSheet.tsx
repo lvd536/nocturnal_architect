@@ -25,17 +25,18 @@ import TaskTagPicker from "./TaskTagPicker";
 
 interface Props {
     task: Task;
+    taskTags?: TaskTag[];
     open: boolean;
     onOpenChange: (open: boolean) => void;
 }
 
-export function TaskEditSheet({ task, open, onOpenChange }: Props) {
+export function TaskEditSheet({ task, taskTags, open, onOpenChange }: Props) {
     const updateTask = useBoardStore((s) => s.updateTask);
     const [title, setTitle] = useState(task.title);
     const [date, setDate] = useState<Date | undefined>(
         task.due_date ? new Date(task.due_date) : undefined,
     );
-    const [tags, setTags] = useState<TaskTag[]>(task.tags || []);
+    const [tags, setTags] = useState<TaskTag[]>(taskTags || []);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -124,7 +125,11 @@ export function TaskEditSheet({ task, open, onOpenChange }: Props) {
                         <Label className="font-bold text-[10px] leading-[150%] tracking-widest uppercase text-[#d0bcff]">
                             Tags & Labels
                         </Label>
-                        <TaskTagPicker value={tags} onChange={setTags} />
+                        <TaskTagPicker
+                            value={tags}
+                            onChange={setTags}
+                            taskId={task.id}
+                        />
                     </div>
 
                     <SheetFooter className="flex-row gap-4 items-center justify-between">

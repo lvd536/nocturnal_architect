@@ -35,13 +35,6 @@ export type Todo = {
     updated_at?: string;
 };
 
-export type TaskTag = {
-    id?: string;
-    label: string;
-    bg: string;
-    text: string;
-};
-
 export type AddTask = {
     title: string;
     color: string;
@@ -62,4 +55,21 @@ export interface BoardMember {
     role: string;
     created_at: string;
     profiles: IUserProfile;
+}
+
+export interface Tag {
+    id: string;
+    board_id: string;
+    label: string;
+    bg: string;
+    text_color: string;
+    created_at: string;
+}
+
+export interface TaskTag {
+    task_id: string;
+    tag_id: string;
+    tasks?: Task;
+    tags?: Tag;
+    created_at: string;
 }

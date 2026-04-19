@@ -32,6 +32,7 @@ import { useShallow } from "zustand/react/shallow";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { syncTodoOrderWithServer } from "@/actions/supabase/board";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
+import { useTaskTags } from "@/hooks/useTaskTags";
 
 interface Props {
     task: Task;
@@ -41,6 +42,7 @@ interface Props {
 export function TaskCard({ task, isDragging }: Props) {
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [isAddTodoOpen, setIsAddTodoOpen] = useState(false);
+    const { tags } = useTaskTags(task.id);
 
     const {
         deleteTask,
@@ -191,18 +193,18 @@ export function TaskCard({ task, isDragging }: Props) {
                     </div>
 
                     <div className="flex items-center gap-2 flex-wrap">
-                        {task.tags &&
-                            task.tags.length > 0 &&
-                            task.tags.map((tag) => (
+                        {tags &&
+                            tags.length > 0 &&
+                            tags.map((tag, index) => (
                                 <Badge
-                                    key={tag.label}
+                                    key={`${tag.tag_id}-${index}`}
                                     style={{
-                                        backgroundColor: tag.bg,
-                                        color: tag.text,
+                                        backgroundColor: tag.tags?.bg,
+                                        color: tag.tags?.text_color,
                                     }}
                                     className="border-0"
                                 >
-                                    {tag.label}
+                                    {tag.tags?.label}
                                 </Badge>
                             ))}
                         {task.done ? (
