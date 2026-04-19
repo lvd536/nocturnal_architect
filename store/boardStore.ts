@@ -9,7 +9,6 @@ import {
     CARD_WIDTH,
 } from "@/consts/todo.consts";
 import * as tasksService from "@/actions/supabase/board";
-import { debounce } from "lodash";
 
 type TaskPatch = Partial<{
     title: string;
@@ -63,13 +62,8 @@ interface BoardState {
     clearBoard: () => void;
 }
 
-const debouncedUpdateTask = debounce(async (id: string, patch: TaskPatch) => {
-    try {
-        await tasksService.updateTask(id, patch);
-    } catch (error) {
-        console.error("API Update Error:", error);
-    }
-}, 1500);
+const updateTaskTimers = new Map<string, ReturnType<typeof setTimeout>>();
+const updatePositionTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
 export const useBoardStore = create<BoardState>()(
     immer((set, get) => ({
@@ -81,7 +75,6 @@ export const useBoardStore = create<BoardState>()(
         setBoardId: (boardId) => set({ boardId }),
 
         loadTasks: async (boardId: string) => {
-            console.log("loadtasks woth bid:", boardId);
             set((s) => {
                 s.isLoading = true;
                 s.boardId = boardId;
@@ -176,11 +169,20 @@ export const useBoardStore = create<BoardState>()(
                 }
             });
 
-            try {
-                await tasksService.updateTask(id, { x, y });
-            } catch (error) {
-                console.error(error);
+            if (updatePositionTimers.has(id)) {
+                clearTimeout(updatePositionTimers.get(id)!);
             }
+
+            const timer = setTimeout(async () => {
+                updatePositionTimers.delete(id);
+                try {
+                    await tasksService.updateTask(id, { x, y });
+                } catch (error) {
+                    console.error(error);
+                }
+            }, 1000);
+
+            updatePositionTimers.set(id, timer);
         },
 
         updatePositionLocal: async (id, x, y) => {
@@ -200,23 +202,20 @@ export const useBoardStore = create<BoardState>()(
                 Object.assign(task, patch);
             });
 
-            const apiPatch: Partial<{
-                title: string;
-                done: boolean;
-                dueDate: string;
-                x: number;
-                y: number;
-                color: string;
-            }> = {};
+            if (updateTaskTimers.has(id)) {
+                clearTimeout(updateTaskTimers.get(id)!);
+            }
 
-            if (patch.title !== undefined) apiPatch.title = patch.title;
-            if (patch.done !== undefined) apiPatch.done = patch.done;
-            if (patch.dueDate !== undefined) apiPatch.dueDate = patch.dueDate;
-            if (patch.x !== undefined) apiPatch.x = patch.x;
-            if (patch.y !== undefined) apiPatch.y = patch.y;
-            if (patch.color !== undefined) apiPatch.color = patch.color;
+            const timer = setTimeout(async () => {
+                updateTaskTimers.delete(id);
+                try {
+                    await tasksService.updateTask(id, patch);
+                } catch (e) {
+                    console.error(e);
+                }
+            }, 1000);
 
-            debouncedUpdateTask(id, apiPatch);
+            updateTaskTimers.set(id, timer);
         },
 
         addTaskFromRemote: (newTask: Task) =>
