@@ -88,7 +88,7 @@ export function TaskCard({ task, isDragging }: Props) {
                     const { x, y } = dragOffsetRef.current;
                     const nextX = snap(location.current.input.clientX - x);
                     const nextY = snap(location.current.input.clientY - y);
-                    updatePositionLocal(
+                    updatePosition(
                         task.id,
                         clamp(nextX, 0, CANVAS_WIDTH - CARD_WIDTH),
                         clamp(nextY, 0, CANVAS_HEIGHT - CARD_HEIGHT),

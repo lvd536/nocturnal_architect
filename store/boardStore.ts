@@ -180,7 +180,7 @@ export const useBoardStore = create<BoardState>()(
                 } catch (error) {
                     console.error(error);
                 }
-            }, 1000);
+            }, 250);
 
             updatePositionTimers.set(id, timer);
         },
@@ -213,7 +213,7 @@ export const useBoardStore = create<BoardState>()(
                 } catch (e) {
                     console.error(e);
                 }
-            }, 1000);
+            }, 700);
 
             updateTaskTimers.set(id, timer);
         },
