@@ -4,19 +4,29 @@ import { useCallback, useEffect, useState, useRef } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { Plus } from "lucide-react";
 import { useBoardStore } from "@/store/boardStore";
 import { useShallow } from "zustand/react/shallow";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Task } from "@/types/board.types";
 import {
     DatesSetArg,
     DayCellContentArg,
     EventContentArg,
 } from "@fullcalendar/core/index.js";
 import TaskCreationModal from "../ProjectBoards/Task/TaskCreationModal";
+
+const getFormattedDate = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+};
+
+const extractDateString = (dateStr?: string) => {
+    if (!dateStr) return new Date().toISOString().split("T")[0];
+    return String(dateStr).slice(0, 10);
+};
 
 export default function CalendarBoard() {
     const calendarRef = useRef<FullCalendar>(null);
@@ -58,9 +68,7 @@ export default function CalendarBoard() {
     const calendarEvents = tasks.map((task) => ({
         id: task.id,
         title: task.title,
-        start:
-            (task as Task).due_date?.split(" ")[0] ||
-            new Date().toISOString().split("T")[0],
+        start: extractDateString(task.due_date ?? new Date().toISOString()),
         backgroundColor: task.color || "#4ade80",
         extendedProps: {
             ...task,
@@ -68,27 +76,24 @@ export default function CalendarBoard() {
     }));
 
     const selectedDayTasks = tasks.filter((task) => {
-        const taskDate =
-            (task as Task).due_date?.split("T")[0] ||
-            new Date().toISOString().split("T")[0];
+        const taskDate = extractDateString(
+            task.due_date ?? new Date().toISOString(),
+        );
         return taskDate === selectedDate;
     });
 
     const renderEventContent = (eventInfo: EventContentArg) => {
         return (
             <div
-                className="h-1.5 w-8 rounded-full mb-1"
+                className="h-1.5 rounded-full!"
                 style={{ backgroundColor: eventInfo.event.backgroundColor }}
             />
         );
     };
 
     const renderDayCellContent = (dayInfo: DayCellContentArg) => {
-        const nextDay = new Date(dayInfo.date);
-
-        nextDay.setDate(nextDay.getDate() + 1);
-
-        const isSelected = nextDay.toISOString().split("T")[0] === selectedDate;
+        const cellDate = getFormattedDate(dayInfo.date);
+        const isSelected = cellDate === selectedDate;
 
         return (
             <div className="flex flex-col w-full h-full justify-between pointer-events-none p-1">
@@ -144,14 +149,10 @@ export default function CalendarBoard() {
                         height="100%"
                         dayMaxEvents={false}
                         dayCellClassNames={(arg) => {
-                            const nextDay = new Date(arg.date);
-
-                            nextDay.setDate(nextDay.getDate() + 1);
-
-                            const isSelected =
-                                nextDay.toISOString().split("T")[0] ===
-                                selectedDate;
-                            return isSelected ? ["selected-day"] : [];
+                            const cellDate = getFormattedDate(arg.date);
+                            return cellDate === selectedDate
+                                ? ["selected-day"]
+                                : [];
                         }}
                     />
                 </div>
