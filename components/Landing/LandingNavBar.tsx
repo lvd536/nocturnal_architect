@@ -60,13 +60,13 @@ export default function LandingNavBar() {
 
     return (
         <div className="fixed top-0 left-0 flex px-6 py-4.25 justify-between items-center border-b border-b-[rgba(73,68,84,0.20)] bg-[rgba(19,19,20,0.60)] shadow-[020px40px-15pxrgba(208,188,255,0.08)] w-full z-99">
-            <div className="flex items-center gap-8 w-fit">
+            <div className="flex items-center gap-4 md:gap-8 w-fit">
                 <div className="flex flex-col items-start w-fit">
-                    <p className="text-[#d0bcff] text-xl font-bold leading-7 left-0 top-0 tracking-[-0.05em]">
+                    <p className="text-[#d0bcff] text-lg md:text-xl font-bold leading-7 left-0 top-0 tracking-[-0.05em]">
                         Nocturnal Architect
                     </p>
                 </div>
-                <div className="flex items-center gap-6 w-fit">
+                <div className="flex items-center gap-2 md:gap-6 w-fit">
                     <div className={wrapperClass("#info")}>
                         <a
                             href="#info"
@@ -93,7 +93,7 @@ export default function LandingNavBar() {
                     </div>
                 </div>
             </div>
-            <div className="flex items-center gap-4 w-fit">
+            <div className="flex items-center gap-4 max-sm:ml-2 w-fit">
                 {user ? (
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
