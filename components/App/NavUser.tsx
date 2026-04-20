@@ -18,6 +18,8 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from "@/components/ui/sidebar";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
 
 export function NavUser({
     user,
@@ -29,6 +31,14 @@ export function NavUser({
     };
 }) {
     const { isMobile } = useSidebar();
+
+    const router = useRouter();
+    const supabase = createClient();
+
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        router.refresh();
+    };
 
     const get2Digits = (str: string) =>
         str.length > 0 ? str.slice(0, 2) : str;
@@ -98,13 +108,13 @@ export function NavUser({
                                 <UserCircle />
                                 Account
                             </DropdownMenuItem>
-                            <DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => router.push("/app/settings")}>
                                 <Settings />
                                 Settings
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleLogout}>
                             <LogOut />
                             Log out
                         </DropdownMenuItem>
