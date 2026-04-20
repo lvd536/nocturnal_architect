@@ -379,10 +379,6 @@ export async function getBoardStats(boardId: string) {
         projected: projectedByDay.get(date) || 0,
     }));
 
-    console.log(tags);
-    console.log(taskTags);
-    console.log(top5Tags);
-
     return {
         tasksTotal: tasks.length,
         membersCount,
