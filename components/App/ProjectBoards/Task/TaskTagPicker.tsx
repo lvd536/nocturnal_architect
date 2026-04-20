@@ -93,7 +93,7 @@ const TaskTagPicker = ({ value, onChange, taskId }: Props) => {
                                             <CommandItem
                                                 key={`${tag.id}-${index}`}
                                                 value={tag.label}
-                                                className="border w-fit h-6.25 font-bold text-[10px] leading-[150%] tracking-wider uppercase pt-0.75 pb-1 px-3 rounded-full border-solid border-[rgba(208,188,255,0.2)] cursor-pointer"
+                                                className="border w-fit h-6.25 font-bold text-[10px] leading-[150%] tracking-wider uppercase pt-0.75 pb-1 px-3 rounded-full border-solid border-[rgba(208,188,255,0.2)] cursor-pointer mt-1.5"
                                                 style={{
                                                     backgroundColor: tag.bg,
                                                     color: tag.text_color,
