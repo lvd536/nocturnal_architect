@@ -40,7 +40,7 @@ export function AddTodoSheet({ taskId, open, onOpenChange }: Props) {
 
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
-            <SheetContent className="shadow-[-40px_0_80px_0_rgba(0,0,0,0.5)] bg-[#1c1b1c] border-l-[rgba(73,68,84,0.1)] border-l border-solid">
+            <SheetContent className="shadow-[-40px_0_80px_0_rgba(0,0,0,0.5)] bg-[#1c1b1c] border-l-[rgba(73,68,84,0.1)] border-l border-solid max-sm:w-full!">
                 <SheetHeader>
                     <SheetTitle className="font-extrabold text-2xl text-[#e5e2e3]">
                         Add Todo

@@ -13,7 +13,7 @@ export default function BoardCard({ board }: IProps) {
 
     return (
         <a
-            className="flex flex-col ityems-center justify-between order w-46.5 backdrop-blur-xl bg-[rgba(53,52,54,0.4)] p-5 rounded-xl border-solid border-[rgba(73,68,84,0.2)]"
+            className="flex flex-col min-h-53 ityems-center justify-between order w-46.5 backdrop-blur-xl bg-[rgba(53,52,54,0.4)] p-5 rounded-xl border-solid border-[rgba(73,68,84,0.2)]"
             href={`/app/boards/${board.id}`}
             onClick={() => setBoardId(board.id)}
         >
