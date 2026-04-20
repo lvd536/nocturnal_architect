@@ -2,18 +2,16 @@
 
 import { Card } from "@/components/ui/card";
 
-const data = [
-    { label: "Architecture", pct: 50, color: "#B8A9E8" },
-    { label: "Engineering", pct: 24, color: "#4DD9AC" },
-    { label: "Review", pct: 16, color: "#9B8FD4" },
-    { label: "Backlog", pct: 10, color: "rgba(180,175,195,0.45)" },
-];
+type TagItem = {
+    label: string;
+    pct: number;
+    color: string;
+};
 
-const TOTAL = 248;
-const R = 60;
-const CIRC = 2 * Math.PI * R;
+function buildArcs(segments: TagItem[]) {
+    const R = 60;
+    const CIRC = 2 * Math.PI * R;
 
-function buildArcs(segments: typeof data) {
     let offset = 0;
     return segments.map((seg) => {
         const dash = (seg.pct / 100) * CIRC;
@@ -24,16 +22,19 @@ function buildArcs(segments: typeof data) {
     });
 }
 
-export function TagDistributionChart() {
+export function TagDistributionChart({
+    total,
+    data,
+}: {
+    total: number;
+    data: TagItem[];
+}) {
+    const R = 60;
     const arcs = buildArcs(data);
 
     return (
         <Card
-            className="
-        flex flex-col
-        text-white
-        p-8
-      "
+            className="flex flex-col text-white p-8"
             style={{
                 border: "1px solid rgba(73, 68, 84, 0.2)",
                 borderRadius: "16px",
@@ -52,6 +53,7 @@ export function TagDistributionChart() {
             >
                 Resource allocation by category
             </p>
+
             <div className="flex flex-1 items-center justify-center">
                 <svg width={160} height={160} viewBox="0 0 160 160">
                     <circle
@@ -85,7 +87,7 @@ export function TagDistributionChart() {
                         fontWeight={700}
                         fill="#fff"
                     >
-                        {TOTAL}
+                        {total}
                     </text>
                     <text
                         x={80}
@@ -100,6 +102,7 @@ export function TagDistributionChart() {
                     </text>
                 </svg>
             </div>
+
             <ul className="mt-4 flex flex-col gap-3 list-none">
                 {data.map((seg) => (
                     <li

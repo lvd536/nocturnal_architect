@@ -1,6 +1,6 @@
 "use client";
 
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import {
     Card,
@@ -16,36 +16,6 @@ import {
     type ChartConfig,
 } from "@/components/ui/chart";
 
-const chartData = [
-    { date: "2024-04-01", actual: 222, projected: 150 },
-    { date: "2024-04-02", actual: 97, projected: 180 },
-    { date: "2024-04-03", actual: 167, projected: 120 },
-    { date: "2024-04-04", actual: 242, projected: 260 },
-    { date: "2024-04-05", actual: 373, projected: 290 },
-    { date: "2024-04-06", actual: 301, projected: 340 },
-    { date: "2024-04-07", actual: 245, projected: 180 },
-    { date: "2024-04-08", actual: 409, projected: 320 },
-    { date: "2024-04-09", actual: 59, projected: 110 },
-    { date: "2024-04-10", actual: 261, projected: 190 },
-    { date: "2024-04-11", actual: 327, projected: 350 },
-    { date: "2024-04-12", actual: 292, projected: 210 },
-    { date: "2024-04-13", actual: 342, projected: 380 },
-    { date: "2024-04-14", actual: 137, projected: 220 },
-    { date: "2024-04-15", actual: 120, projected: 170 },
-    { date: "2024-04-16", actual: 138, projected: 190 },
-    { date: "2024-04-17", actual: 446, projected: 360 },
-    { date: "2024-04-18", actual: 364, projected: 410 },
-    { date: "2024-04-19", actual: 243, projected: 180 },
-    { date: "2024-04-20", actual: 89, projected: 150 },
-    { date: "2024-04-21", actual: 137, projected: 200 },
-    { date: "2024-04-22", actual: 224, projected: 170 },
-    { date: "2024-04-23", actual: 138, projected: 230 },
-    { date: "2024-09-24", actual: 387, projected: 290 },
-    { date: "2024-09-25", actual: 215, projected: 250 },
-    { date: "2024-09-26", actual: 75, projected: 130 },
-    { date: "2024-09-27", actual: 383, projected: 420 },
-];
-
 const chartConfig = {
     actual: {
         label: "Actual",
@@ -57,16 +27,11 @@ const chartConfig = {
     },
 } satisfies ChartConfig;
 
-export function ChartAreaInteractive() {
-    const filteredData = chartData.filter((item) => {
-        const date = new Date(item.date);
-        const referenceDate = new Date("2024-06-30");
-        const daysToSubtract = 90;
-        const startDate = new Date(referenceDate);
-        startDate.setDate(startDate.getDate() - daysToSubtract);
-        return date >= startDate;
-    });
-
+export function ChartAreaInteractive({
+    data,
+}: {
+    data: { date: string; actual: number; projected: number }[];
+}) {
     return (
         <Card className="@container/card col-span-2 border w-full h-112.5 backdrop-blur-xl bg-[rgba(53,52,54,0.4)] pt-8 pb-20 px-8 rounded-2xl border-solid border-[rgba(73,68,84,0.2)]">
             <CardHeader>
@@ -98,7 +63,7 @@ export function ChartAreaInteractive() {
                     config={chartConfig}
                     className="aspect-auto h-62.5 w-full"
                 >
-                    <AreaChart data={filteredData}>
+                    <AreaChart data={data}>
                         <defs>
                             <linearGradient
                                 id="fillProjected"
@@ -144,6 +109,12 @@ export function ChartAreaInteractive() {
                                 });
                             }}
                         />
+                        <YAxis
+                            tickLine={false}
+                            axisLine={false}
+                            allowDecimals={false}
+                            domain={[0, "dataMax + 2"]}
+                        />
                         <ChartTooltip
                             cursor={false}
                             content={
@@ -163,7 +134,7 @@ export function ChartAreaInteractive() {
 
                         <Area
                             dataKey="projected"
-                            type="natural"
+                            type="monotone"
                             fill="url(#fillProjected)"
                             stroke="#334166"
                             strokeWidth={"2.6px"}
@@ -171,7 +142,7 @@ export function ChartAreaInteractive() {
                         />
                         <Area
                             dataKey="actual"
-                            type="natural"
+                            type="monotone"
                             fill="url(#fillActual)"
                             stroke="var(--color-actual)"
                             strokeWidth={"2.6px"}

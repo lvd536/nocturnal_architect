@@ -1,14 +1,36 @@
+import { getBoardStats } from "@/actions/supabase/board";
 import { ChartAreaInteractive } from "@/components/App/Analytics/ChartAreaInteractive";
 import { SectionCards } from "@/components/App/Analytics/SectionCards";
 import { TagDistributionChart } from "@/components/App/Analytics/TagDistributionChart";
 
-export default function Stats() {
+interface Props {
+    params: Promise<{
+        id: string;
+    }>;
+}
+
+export default async function StatsPage({ params }: Props) {
+    const { id } = await params;
+    if (!id) return null;
+
+    const analytics = await getBoardStats(id);
+    if (!analytics) return null;
+
     return (
         <>
-            <SectionCards />
+            <SectionCards
+                stats={{
+                    activeTasks: analytics.activeTasks,
+                    completionPercentage: analytics.completionPercentage,
+                    membersCount: analytics.membersCount ?? 0,
+                }}
+            />
             <div className="w-full grid grid-cols-3 gap-4 px-4 lg:px-6">
-                <ChartAreaInteractive />
-                <TagDistributionChart />
+                <ChartAreaInteractive data={analytics.chartData} />
+                <TagDistributionChart
+                    data={analytics.top5Tags}
+                    total={analytics.tasksTotal}
+                />
             </div>
         </>
     );

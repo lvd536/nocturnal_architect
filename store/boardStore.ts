@@ -105,7 +105,7 @@ export const useBoardStore = create<BoardState>()(
                 const fallbackX = 180 + tasks.length * 24;
                 const fallbackY = 140 + tasks.length * 24;
 
-                const task: Omit<Task, "id"> = {
+                const task: Omit<Task, "id" | "done_in"> = {
                     title,
                     x: clamp(
                         position?.x ?? fallbackX,

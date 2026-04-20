@@ -41,7 +41,7 @@ export default function TaskCreationModal({
             y: (e.get("task-y") || 0) as number,
         };
 
-        const newTask: Omit<Task, "id"> = {
+        const newTask: Omit<Task, "id" | "done_in"> = {
             title,
             due_date: date.toISOString(),
             x,
