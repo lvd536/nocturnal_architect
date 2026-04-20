@@ -25,7 +25,7 @@ export default async function StatsPage({ params }: Props) {
                     membersCount: analytics.membersCount ?? 0,
                 }}
             />
-            <div className="w-full grid grid-cols-3 gap-4 px-4 lg:px-6">
+            <div className="w-full grid lg:grid-cols-3 gap-4 px-4 lg:px-6">
                 <ChartAreaInteractive data={analytics.chartData} />
                 <TagDistributionChart
                     data={analytics.top5Tags}
