@@ -38,7 +38,7 @@ export default function CanvasBoardHelp({ addTask }: IProps) {
             <HoverCardContent
                 side="left"
                 align="start"
-                className="z-50 w-85 space-y-4 rounded-3xl border border-white/10 bg-black/90 p-4 backdrop-blur-xl"
+                className="z-50 w-70 sm:w-85 space-y-4 rounded-3xl border border-white/10 bg-black/90 p-4 backdrop-blur-xl"
             >
                 <div>
                     <h2 className="text-lg font-semibold">Quick actions</h2>
@@ -57,17 +57,17 @@ export default function CanvasBoardHelp({ addTask }: IProps) {
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-3 text-sm text-white/70">
-                        <div className="flex items-start gap-3">
-                            <div className="mt-0.5 h-2.5 w-2.5 rounded-full bg-violet-400" />
+                        <div className="flex items-center gap-3">
+                            <div className="mt-0.5 h-2.5 w-2.5 shrink-0 rounded-full bg-violet-400" />
                             Create todos from the top form.
                         </div>
-                        <div className="flex items-start gap-3">
-                            <div className="mt-0.5 h-2.5 w-2.5 rounded-full bg-cyan-400" />
+                        <div className="flex items-center gap-3">
+                            <div className="mt-0.5 h-2.5 w-2.5 shrink-0 rounded-full bg-cyan-400" />
                             Double-click anywhere on the canvas to place a todo
                             there.
                         </div>
-                        <div className="flex items-start gap-3">
-                            <div className="mt-0.5 h-2.5 w-2.5 rounded-full bg-emerald-400" />
+                        <div className="flex items-center gap-3">
+                            <div className="mt-0.5 h-2.5 w-2.5 shrink-0 rounded-full bg-emerald-400" />
                             Drag cards freely with Pragmatic drag and drop.
                         </div>
                     </CardContent>
