@@ -126,7 +126,19 @@ export const useBoardStore = create<BoardState>()(
                 };
 
                 try {
-                    await tasksService.createTask(boardId, task);
+                    const newTaskId = await tasksService.createTask(
+                        boardId,
+                        task,
+                    );
+                    const newTask: Omit<Task, "done_in"> = {
+                        id: newTaskId,
+                        ...task,
+                    };
+                    set((state) => ({
+                        tasks: !state.tasks.some((t) => t.id === newTaskId)
+                            ? [...state.tasks, newTask]
+                            : state.tasks,
+                    }));
                 } catch (error) {
                     console.error(error);
                 }
@@ -335,9 +347,24 @@ export const useBoardStore = create<BoardState>()(
                 };
 
                 try {
-                    await tasksService.createTodo(taskId, todo as Todo);
+                    const newTodoId = await tasksService.createTodo(
+                        taskId,
+                        todo as Todo,
+                    );
+                    const newTodo: Todo = {
+                        id: newTodoId,
+                        ...todo,
+                    };
+                    set((state) => ({
+                        tasks: state.tasks.map((t) =>
+                            t.id === taskId &&
+                            !t.todos?.some((td) => td.id === newTodoId)
+                                ? { ...t, todos: [...(t.todos || []), newTodo] }
+                                : t,
+                        ),
+                    }));
                 } catch (error) {
-                    console.error(error);
+                    console.error("Ошибка при добавлении туду:", error);
                 }
             },
 

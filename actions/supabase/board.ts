@@ -73,21 +73,27 @@ export async function fetchTasks(boardId: string): Promise<Task[]> {
 export async function createTask(
     boardId: string,
     task: Omit<Task, "id" | "done_in">,
-): Promise<void> {
+) {
     const supabase = await createClient();
 
-    const { error } = await supabase.from("tasks").insert({
-        board_id: boardId,
-        title: task.title,
-        color: task.color,
-        x: task.x,
-        y: task.y,
-        done: task.done,
-        due_date: task.due_date,
-        created_at: task.created_at,
-    });
+    const { data, error } = await supabase
+        .from("tasks")
+        .insert({
+            board_id: boardId,
+            title: task.title,
+            color: task.color,
+            x: task.x,
+            y: task.y,
+            done: task.done,
+            due_date: task.due_date,
+            created_at: task.created_at,
+        })
+        .select()
+        .single();
 
-    if (error) throw error;
+    if (error || !data.id) throw error ?? new Error("Can't get task id");
+
+    return data.id as string;
 }
 
 export async function updateTask(
@@ -132,22 +138,27 @@ export async function deleteTodo(id: string): Promise<void> {
     if (error) throw error;
 }
 
-export async function createTodo(taskId: string, todo: Todo): Promise<void> {
+export async function createTodo(taskId: string, todo: Todo) {
     const supabase = await createClient();
 
-    const { error } = await supabase.from("todos").insert({
-        id: todo.id,
-        task_id: taskId,
-        title: todo.title,
-        description: todo.description,
-        done: todo.done,
-        pinned: todo.pinned,
-        order_index: todo.order_index,
-        tag: todo.tag,
-        created_at: todo.created_at,
-    });
+    const { data, error } = await supabase
+        .from("todos")
+        .insert({
+            task_id: taskId,
+            title: todo.title,
+            description: todo.description,
+            done: todo.done,
+            pinned: todo.pinned,
+            order_index: todo.order_index,
+            tag: todo.tag,
+            created_at: todo.created_at,
+        })
+        .select()
+        .single();
 
-    if (error) throw error;
+    if (error || !data.id) throw error ?? new Error("Can't get todo id");
+
+    return data.id as string;
 }
 
 export async function createBoard(title: string, description: string) {
