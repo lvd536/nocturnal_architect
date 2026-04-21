@@ -14,12 +14,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { upsertInviteLink } from "@/actions/supabase/board";
 import { useBoardStore } from "@/store/boardStore";
+import { useRoleStore } from "@/store/roleStore";
 
 export function InviteModal({ children }: React.PropsWithChildren) {
     const [inviteCode, setInviteCode] = useState("");
     const [role, setRole] = useState<"editor" | "viewer">("editor");
     const [copied, setCopied] = useState(false);
     const boardId = useBoardStore((s) => s.boardId);
+    const { isEditor } = useRoleStore();
 
     const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
 
@@ -41,6 +43,8 @@ export function InviteModal({ children }: React.PropsWithChildren) {
         if (inviteCode && role)
             (async () => await upsertInviteLink(boardId, inviteCode, role))();
     }, [role, inviteCode, boardId]);
+
+    if (!isEditor) return null;
 
     return (
         <Dialog onOpenChange={handleOpenChange}>

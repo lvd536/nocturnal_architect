@@ -8,6 +8,7 @@ import {
     dropTargetForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
+import { useRoleStore } from "@/store/roleStore";
 
 interface Props {
     taskId: string;
@@ -18,8 +19,10 @@ interface Props {
 export function TodoItem({ taskId, todo, index }: Props) {
     const ref = useRef(null);
     const deleteTodo = useBoardStore((s) => s.deleteTodo);
+    const { isEditor } = useRoleStore();
 
     useEffect(() => {
+        if (!isEditor) return;
         const element = ref.current;
         if (!element) return;
         return combine(
@@ -42,7 +45,7 @@ export function TodoItem({ taskId, todo, index }: Props) {
                 }),
             }),
         );
-    }, [taskId, todo.id, index]);
+    }, [taskId, todo.id, index, isEditor]);
 
     return (
         <div
@@ -62,12 +65,14 @@ export function TodoItem({ taskId, todo, index }: Props) {
                 <h1 className="font-bold text-base leading-[138%] text-[#e5e2e3] my-3">
                     {todo.title}
                 </h1>
-                <button
-                    onClick={() => deleteTodo(taskId, todo.id)}
-                    className="mt-3 opacity-0 group-hover:opacity-100 transition-opacity text-red-400/60 hover:text-red-400"
-                >
-                    <Trash2 className="w-4 h-4" />
-                </button>
+                {isEditor && (
+                    <button
+                        onClick={() => deleteTodo(taskId, todo.id)}
+                        className="mt-3 opacity-0 group-hover:opacity-100 transition-opacity text-red-400/60 hover:text-red-400"
+                    >
+                        <Trash2 className="w-4 h-4" />
+                    </button>
+                )}
             </div>
             <p className="font-normal text-xs leading-[133%] text-[#cbc3d7]">
                 {todo.description}

@@ -448,3 +448,26 @@ export async function getBoardStats(boardId: string) {
         chartData,
     };
 }
+
+export async function checkIsEditor(boardId: string) {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase.rpc("is_board_editor", {
+        p_board_id: boardId,
+    });
+
+    if (error) return { error };
+    console.log(data);
+    return !!data as boolean;
+}
+
+export async function checkIsOwner(boardId: string) {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase.rpc("is_board_owner", {
+        p_board_id: boardId,
+    });
+
+    if (error) return { error };
+    return !!data as boolean;
+}

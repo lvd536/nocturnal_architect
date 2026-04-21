@@ -32,6 +32,7 @@ import { useShallow } from "zustand/react/shallow";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { syncTodoOrderWithServer } from "@/actions/supabase/board";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
+import { useRoleStore } from "@/store/roleStore";
 
 interface Props {
     task: Task;
@@ -42,6 +43,7 @@ interface Props {
 export function TaskCard({ task, tags, isDragging }: Props) {
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [isAddTodoOpen, setIsAddTodoOpen] = useState(false);
+    const { isEditor } = useRoleStore();
 
     const {
         deleteTask,
@@ -70,6 +72,7 @@ export function TaskCard({ task, tags, isDragging }: Props) {
     }, [task]);
 
     useEffect(() => {
+        if (!isEditor) return;
         const el = ref.current;
         if (!el) return;
 
@@ -123,9 +126,11 @@ export function TaskCard({ task, tags, isDragging }: Props) {
         updatePositionLocal,
         setDraggingId,
         task.todos?.length,
+        isEditor,
     ]);
 
     useEffect(() => {
+        if (!isEditor) return;
         return monitorForElements({
             onDrop({ location, source }) {
                 const target = location.current.dropTargets[0];
@@ -147,7 +152,7 @@ export function TaskCard({ task, tags, isDragging }: Props) {
                 }
             },
         });
-    }, []);
+    }, [isEditor, moveTodo]);
 
     return (
         <>
@@ -183,12 +188,14 @@ export function TaskCard({ task, tags, isDragging }: Props) {
                             </div>
                         </div>
 
-                        <TaskDropdownMenu
-                            isDone={task.done}
-                            onDelete={() => deleteTask(task.id)}
-                            onEdit={() => setIsEditOpen(true)}
-                            onToggleDone={() => toggleDone(task.id)}
-                        />
+                        {isEditor && (
+                            <TaskDropdownMenu
+                                isDone={task.done}
+                                onDelete={() => deleteTask(task.id)}
+                                onEdit={() => setIsEditOpen(true)}
+                                onToggleDone={() => toggleDone(task.id)}
+                            />
+                        )}
                     </div>
 
                     <div className="flex items-center gap-2 flex-wrap">
@@ -230,27 +237,33 @@ export function TaskCard({ task, tags, isDragging }: Props) {
                             />
                         ))}
 
-                    <Button
-                        variant="default"
-                        onClick={() => setIsAddTodoOpen(true)}
-                        className="flex items-center justify-center border w-full h-11.5 px-0 py-3 rounded-xl border-dashed border-[rgba(73,68,84,0.3)] hover:border-[rgba(73,68,84,0.5)] font-bold text-sm text-center text-slate-500 bg-transparent!"
-                    >
-                        <Plus />
-                        <p>Add Todo</p>
-                    </Button>
+                    {isEditor && (
+                        <Button
+                            variant="default"
+                            onClick={() => setIsAddTodoOpen(true)}
+                            className="flex items-center justify-center border w-full h-11.5 px-0 py-3 rounded-xl border-dashed border-[rgba(73,68,84,0.3)] hover:border-[rgba(73,68,84,0.5)] font-bold text-sm text-center text-slate-500 bg-transparent!"
+                        >
+                            <Plus />
+                            <p>Add Todo</p>
+                        </Button>
+                    )}
                 </CardContent>
             </Card>
 
-            <TaskEditSheet
-                task={task}
-                open={isEditOpen}
-                onOpenChange={setIsEditOpen}
-            />
-            <AddTodoSheet
-                taskId={task.id}
-                open={isAddTodoOpen}
-                onOpenChange={setIsAddTodoOpen}
-            />
+            {isEditor && (
+                <>
+                    <TaskEditSheet
+                        task={task}
+                        open={isEditOpen}
+                        onOpenChange={setIsEditOpen}
+                    />
+                    <AddTodoSheet
+                        taskId={task.id}
+                        open={isAddTodoOpen}
+                        onOpenChange={setIsAddTodoOpen}
+                    />
+                </>
+            )}
         </>
     );
 }

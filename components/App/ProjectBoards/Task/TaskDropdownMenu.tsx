@@ -8,6 +8,7 @@ import {
     DropdownMenuLabel,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useRoleStore } from "@/store/roleStore";
 
 interface Props {
     isDone: boolean;
@@ -22,6 +23,10 @@ export function TaskDropdownMenu({
     onEdit,
     onToggleDone,
 }: Props) {
+    const { isEditor } = useRoleStore();
+    
+    if (!isEditor) return null
+    
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>

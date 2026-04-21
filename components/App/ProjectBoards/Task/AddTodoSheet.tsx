@@ -24,6 +24,7 @@ interface Props {
 
 export function AddTodoSheet({ taskId, open, onOpenChange }: Props) {
     const addTodo = useBoardStore((s) => s.addTodo);
+
     const [form, setForm] = useState<AddTodo>({
         title: "",
         description: "",

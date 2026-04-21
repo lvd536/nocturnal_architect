@@ -19,6 +19,7 @@ import { useParams } from "next/navigation";
 import { useShallow } from "zustand/react/shallow";
 import BoardMenu from "./BoardMenu";
 import { useAllTasksTags } from "@/hooks/useAllTasksTags";
+import { useIsEditor } from "@/hooks/useIsEditor";
 
 export default function CanvasBoard() {
     const canvasScrollRef = useRef<HTMLDivElement | null>(null);
@@ -38,12 +39,15 @@ export default function CanvasBoard() {
             })),
         );
 
+    const { isEditor } = useIsEditor(path.id ? (path.id as string) : boardId);
+
     const { isPanning, panHandlers } = useCanvasPan({
         containerRef: canvasScrollRef,
     });
 
     const handleCanvasDoubleClick = useCallback(
         (event: React.MouseEvent<HTMLDivElement>) => {
+            if (!isEditor) return;
             const scrollEl = canvasScrollRef.current;
             const surfaceEl = surfaceRef.current;
             if (!scrollEl || !surfaceEl) return;
@@ -62,7 +66,7 @@ export default function CanvasBoard() {
                 { x, y },
             );
         },
-        [addTask],
+        [addTask, isEditor],
     );
 
     useEffect(() => {
@@ -86,13 +90,14 @@ export default function CanvasBoard() {
     }, []);
 
     useEffect(() => {
+        if (!isEditor) return;
         return monitorForElements({
             onDrop: () => {
                 setDraggingId(null);
                 setIsOverCanvas(false);
             },
         });
-    }, [setDraggingId]);
+    }, [setDraggingId, isEditor]);
 
     return (
         <div className="min-h-screen text-white">
@@ -134,7 +139,9 @@ export default function CanvasBoard() {
                                     ))}
                             </div>
                         </div>
-                        <CanvasBoardHelp addTask={addTask} />
+                        <CanvasBoardHelp
+                            addTask={addTask}
+                        />
                         <BoardMenu />
                     </div>
                 </div>

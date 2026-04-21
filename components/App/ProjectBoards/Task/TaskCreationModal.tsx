@@ -25,12 +25,14 @@ import {
 } from "@/components/ui/popover";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
+import { useRoleStore } from "@/store/roleStore";
 
 export default function TaskCreationModal({
     children,
 }: React.PropsWithChildren) {
     const [date, setDate] = useState<Date | undefined>();
     const boardId = useBoardStore((s) => s.boardId);
+    const { isEditor } = useRoleStore();
 
     const handleSubmit = async (e: FormData) => {
         if (!date || !boardId) return;
@@ -54,6 +56,8 @@ export default function TaskCreationModal({
 
         await createTask(boardId, newTask);
     };
+
+    if (!isEditor) return null;
 
     return (
         <Dialog>

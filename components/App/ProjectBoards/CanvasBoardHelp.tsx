@@ -11,6 +11,7 @@ import {
     HoverCardContent,
     HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { useRoleStore } from "@/store/roleStore";
 import { AddTask } from "@/types/board.types";
 import { Info, Plus } from "lucide-react";
 
@@ -25,6 +26,9 @@ interface IProps {
 }
 
 export default function CanvasBoardHelp({ addTask }: IProps) {
+    const { isEditor } = useRoleStore();
+    if (!isEditor) return null;
+
     return (
         <HoverCard openDelay={250}>
             <HoverCardTrigger asChild>
