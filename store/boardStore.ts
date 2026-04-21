@@ -259,11 +259,11 @@ export const useBoardStore = create<BoardState>()(
                         t.id === taskId
                             ? {
                                   ...t,
-                                  todos: t.todos?.some(
+                                  todos: (t.todos || []).some(
                                       (todo) => todo.id === newTodo.id,
                                   )
-                                      ? t.todos || []
-                                      : [...[t.todos ?? []], newTodo],
+                                      ? t.todos
+                                      : [...(t.todos || []), newTodo],
                               }
                             : t,
                     ),
