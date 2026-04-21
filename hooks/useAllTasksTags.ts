@@ -1,10 +1,10 @@
-import { fetchBoardTags } from "@/actions/supabase/board";
+import { fetchAllTaskTags } from "@/actions/supabase/board";
 import { useBoardStore } from "@/store/boardStore";
-import { Tag } from "@/types/board.types";
+import { TaskTag } from "@/types/board.types";
 import { useEffect, useState } from "react";
 
-export function useBoardTags() {
-    const [tags, setTags] = useState<Tag[] | null>(null);
+export function useAllTasksTags() {
+    const [tags, setTags] = useState<Record<string, TaskTag[]> | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -21,9 +21,9 @@ export function useBoardTags() {
                 return;
             }
 
-            const tagsData = await fetchBoardTags(boardId);
+            const tagsData = await fetchAllTaskTags(boardId);
             if (!tagsData) {
-                setError("Error while fetch board tags");
+                setError("Error while fetch tasks tags");
                 setLoading(false);
                 return;
             }

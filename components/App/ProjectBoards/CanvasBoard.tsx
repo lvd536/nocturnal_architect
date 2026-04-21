@@ -18,12 +18,14 @@ import CanvasBoardHelp from "./CanvasBoardHelp";
 import { useParams } from "next/navigation";
 import { useShallow } from "zustand/react/shallow";
 import BoardMenu from "./BoardMenu";
+import { useAllTasksTags } from "@/hooks/useAllTasksTags";
 
 export default function CanvasBoard() {
     const canvasScrollRef = useRef<HTMLDivElement | null>(null);
     const surfaceRef = useRef<HTMLDivElement | null>(null);
     const [isOverCanvas, setIsOverCanvas] = useState(false);
     const path = useParams();
+    const { tags } = useAllTasksTags();
 
     const { tasks, draggingId, addTask, setDraggingId, boardId } =
         useBoardStore(
@@ -126,6 +128,7 @@ export default function CanvasBoard() {
                                         <TaskCard
                                             key={task.id}
                                             task={task}
+                                            tags={tags ? tags[task.id] : null}
                                             isDragging={draggingId === task.id}
                                         />
                                     ))}

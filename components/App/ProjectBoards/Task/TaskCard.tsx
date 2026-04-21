@@ -22,7 +22,7 @@ import {
     CARD_HEIGHT,
     CARD_WIDTH,
 } from "@/consts/todo.consts";
-import { Task } from "@/types/board.types";
+import { Task, TaskTag } from "@/types/board.types";
 import { useBoardStore } from "@/store/boardStore";
 import { TaskDropdownMenu } from "./TaskDropdownMenu";
 import { TaskEditSheet } from "./TaskEditSheet";
@@ -32,17 +32,16 @@ import { useShallow } from "zustand/react/shallow";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { syncTodoOrderWithServer } from "@/actions/supabase/board";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
-import { useTaskTags } from "@/hooks/useTaskTags";
 
 interface Props {
     task: Task;
+    tags: TaskTag[] | null;
     isDragging: boolean;
 }
 
-export function TaskCard({ task, isDragging }: Props) {
+export function TaskCard({ task, tags, isDragging }: Props) {
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [isAddTodoOpen, setIsAddTodoOpen] = useState(false);
-    const { tags } = useTaskTags(task.id);
 
     const {
         deleteTask,

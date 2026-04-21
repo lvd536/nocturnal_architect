@@ -21,7 +21,7 @@ export function useBoardMembers() {
             }
             const membersData = await fetchBoardMembers(boardId);
             if (!membersData) {
-                setError("Error while fetch members");
+                setError("Error while fetch board members");
                 setLoading(false);
                 return;
             }

@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { BoardMember, Tag, Task, Todo } from "@/types/board.types";
+import { BoardMember, Tag, Task, TaskTag, Todo } from "@/types/board.types";
 
 type BoardStatsPoint = {
     date: string;
@@ -284,6 +284,54 @@ export async function fetchTaskTags(taskId: string) {
     }
 
     return data || [];
+}
+
+export async function fetchAllTaskTags(boardId: string) {
+    const supabase = await createClient();
+
+    const { data: tags, error: tagsError } = await supabase
+        .from("tags")
+        .select("*")
+        .eq("board_id", boardId);
+
+    if (tagsError) return;
+
+    const tagIds = tags.map((tag) => (tag as Tag).id);
+
+    const { error, data } = await supabase
+        .from("task_tags")
+        .select("*, tasks(board_id), tags(*)")
+        .in(
+            "tag_id",
+            tagIds.length > 0
+                ? tagIds
+                : ["00000000-0000-0000-0000-000000000000"],
+        );
+
+    if (error) {
+        console.log(error);
+        throw error;
+    }
+
+    const sortedTaskTags: Record<string, TaskTag[]> =
+        data && data.length > 0
+            ? data.reduce(
+                  (acc, item) => {
+                      const taskId = item.task_id;
+
+                      if (!acc[taskId]) {
+                          acc[taskId] = [];
+                      }
+
+                      acc[taskId].push(item);
+
+                      return acc;
+                  },
+                  {} as Record<string, TaskTag[]>,
+              )
+            : {};
+
+    return sortedTaskTags;
 }
 
 export async function addTaskTag(task_id: string, tag_id: string) {
