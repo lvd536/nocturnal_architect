@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { BrainCog, LayoutDashboard } from "lucide-react";
 import { NavMain } from "@/components/App/NavMain";
 import { NavUser } from "@/components/App/NavUser";

@@ -1,1 +1,0 @@
-../../ui/card../../ui/button../../ui/badge../../ui/label../../ui/input
