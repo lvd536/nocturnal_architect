@@ -139,9 +139,7 @@ export default function CanvasBoard() {
                                     ))}
                             </div>
                         </div>
-                        <CanvasBoardHelp
-                            addTask={addTask}
-                        />
+                        <CanvasBoardHelp addTask={addTask} />
                         <BoardMenu />
                     </div>
                 </div>

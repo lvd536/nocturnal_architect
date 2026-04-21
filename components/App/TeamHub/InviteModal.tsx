@@ -21,7 +21,7 @@ export function InviteModal({ children }: React.PropsWithChildren) {
     const [role, setRole] = useState<"editor" | "viewer">("editor");
     const [copied, setCopied] = useState(false);
     const boardId = useBoardStore((s) => s.boardId);
-    const { isEditor } = useRoleStore();
+    const { isOwner } = useRoleStore();
 
     const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
 
@@ -44,7 +44,7 @@ export function InviteModal({ children }: React.PropsWithChildren) {
             (async () => await upsertInviteLink(boardId, inviteCode, role))();
     }, [role, inviteCode, boardId]);
 
-    if (!isEditor) return null;
+    if (!isOwner) return null;
 
     return (
         <Dialog onOpenChange={handleOpenChange}>
