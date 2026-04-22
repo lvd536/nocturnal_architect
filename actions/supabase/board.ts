@@ -2,6 +2,7 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { BoardMember, Tag, Task, TaskTag, Todo } from "@/types/board.types";
+import { revalidatePath } from "next/cache";
 
 type BoardStatsPoint = {
     date: string;
@@ -174,6 +175,7 @@ export async function createBoard(title: string, description: string) {
         throw error;
     }
 
+    revalidatePath("/app");
     return data;
 }
 

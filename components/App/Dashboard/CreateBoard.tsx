@@ -17,19 +17,21 @@ import { Label } from "@/components/ui/label";
 import { CirclePlus } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { createBoard } from "@/actions/supabase/board";
+import { useState } from "react";
 
 export default function CreateBoard() {
-    const handleSubmit = async (e: FormData) => {
-        const { title, description } = {
-            title: e.get("board-name") || "",
-            description: e.get("board-description") || "",
-        };
-        
+    const [open, setOpen] = useState(false);
+
+    const handleSubmit = async (formData: FormData) => {
+        const title = formData.get("board-name") as string;
+        const description = formData.get("board-description") as string;
+
         await createBoard(title.toString(), description.toString());
+        setOpen(false);
     };
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger>
                 <div className="w-46.5 h-53 backdrop-blur-xl bg-[rgba(53,52,54,0.4)] p-6 rounded-xl border-2 border-dashed border-[rgba(73,68,84,0.3)]">
                     <CirclePlus className="w-12 h-12 stroke-[#d0bcff] bg-[rgba(208,188,255,0.1)] rounded-full p-3 mx-auto" />
@@ -55,7 +57,7 @@ export default function CreateBoard() {
                             precision. Set your environment below.
                         </DialogDescription>
                     </DialogHeader>
-                    <FieldGroup>
+                    <FieldGroup className="my-4">
                         <Field>
                             <Label
                                 className="font-bold text-xs leading-[133%] tracking-widest uppercase text-[rgba(208,188,255,0.8)]"
