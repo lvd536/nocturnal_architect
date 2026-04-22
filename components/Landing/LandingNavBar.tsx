@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LogOut, LayoutDashboard, Settings } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Link } from "next-view-transitions";
 
 export default function LandingNavBar() {
     const [activeBlock, setActiveBlock] = useState<string>("#info");
@@ -134,19 +135,23 @@ export default function LandingNavBar() {
                             <DropdownMenuSeparator className="bg-[rgba(73,68,84,0.2)]" />
 
                             <DropdownMenuItem
-                                onClick={() => router.push("/app")}
                                 className="cursor-pointer focus:bg-[rgba(208,188,255,0.1)] focus:text-[#D0BCFF]"
+                                asChild
                             >
-                                <LayoutDashboard className="mr-2 h-4 w-4" />
-                                <span>Dashboard</span>
+                                <Link href="/app">
+                                    <LayoutDashboard className="mr-2 h-4 w-4" />
+                                    <span>Dashboard</span>
+                                </Link>
                             </DropdownMenuItem>
 
                             <DropdownMenuItem
-                                onClick={() => router.push("/app/settings")}
                                 className="cursor-pointer focus:bg-[rgba(208,188,255,0.1)] focus:text-[#D0BCFF]"
+                                asChild
                             >
-                                <Settings className="mr-2 h-4 w-4" />
-                                <span>Settings</span>
+                                <Link href="/app/settings">
+                                    <Settings className="mr-2 h-4 w-4" />
+                                    <span>Settings</span>
+                                </Link>
                             </DropdownMenuItem>
 
                             <DropdownMenuSeparator className="bg-[rgba(73,68,84,0.2)]" />

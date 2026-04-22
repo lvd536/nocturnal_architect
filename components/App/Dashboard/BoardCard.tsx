@@ -3,6 +3,7 @@
 import { formatTime } from "@/helpers/date.helpers";
 import { useBoardStore } from "@/store/boardStore";
 import { Board } from "@/types/board.types";
+import { Link } from "next-view-transitions";
 
 interface IProps {
     board: Board;
@@ -12,7 +13,7 @@ export default function BoardCard({ board }: IProps) {
     const setBoardId = useBoardStore((s) => s.setBoardId);
 
     return (
-        <a
+        <Link
             className="group flex flex-col justify-between w-46.5 h-53 backdrop-blur-xl bg-[rgba(53,52,54,0.4)] p-5 rounded-2xl border border-solid border-[rgba(73,68,84,0.2)] hover:border-[rgba(208,188,255,0.3)] hover:bg-[rgba(53,52,54,0.6)] hover:shadow-[0_0_25px_-5px_rgba(208,188,255,0.15)] transition-all duration-300 cursor-pointer"
             href={`/app/boards/${board.id}`}
             onClick={() => setBoardId(board.id)}
@@ -34,6 +35,6 @@ export default function BoardCard({ board }: IProps) {
                     {formatTime(board.created_at)}
                 </p>
             </div>
-        </a>
+        </Link>
     );
 }

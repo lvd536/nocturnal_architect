@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useBoardStore } from "@/store/boardStore";
 import { usePathname } from "next/navigation";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 
 export function NavMain() {
     const boardId = useBoardStore((s) => s.boardId);

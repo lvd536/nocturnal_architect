@@ -13,6 +13,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { Link } from "next-view-transitions";
 
 interface SidebarUser {
     email: string;
@@ -36,12 +37,12 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                             asChild
                             className="data-[slot=sidebar-menu-button]:p-1.5!"
                         >
-                            <a href="#">
+                            <Link href="/">
                                 <BrainCog className="size-5! text-[#d0bcff]" />
                                 <span className="text-base font-semibold text-[#d0bcff]">
                                     Nocturnal Architect
                                 </span>
-                            </a>
+                            </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>
