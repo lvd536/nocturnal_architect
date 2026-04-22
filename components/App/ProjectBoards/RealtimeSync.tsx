@@ -75,7 +75,7 @@ export function RealtimeSync() {
             console.log("remove channel");
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [tasks]);
+    }, []);
 
     return null;
 }
