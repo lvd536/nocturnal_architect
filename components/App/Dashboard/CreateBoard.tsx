@@ -33,12 +33,15 @@ export default function CreateBoard() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger>
-                <div className="w-46.5 h-53 backdrop-blur-xl bg-[rgba(53,52,54,0.4)] p-6 rounded-xl border-2 border-dashed border-[rgba(73,68,84,0.3)]">
-                    <CirclePlus className="w-12 h-12 stroke-[#d0bcff] bg-[rgba(208,188,255,0.1)] rounded-full p-3 mx-auto" />
-                    <p className="font-bold text-lg leading-[156%] text-center text-[#e5e2e3] mt-4 mb-2">
+                <div className="group flex flex-col items-center justify-center w-46.5 h-53 backdrop-blur-xl bg-[rgba(53,52,54,0.2)] p-6 rounded-2xl border-2 border-dashed border-[rgba(73,68,84,0.3)] hover:border-[rgba(208,188,255,0.4)] hover:bg-[rgba(53,52,54,0.4)] transition-all duration-300 cursor-pointer">
+                    <div className="relative">
+                        <CirclePlus className="w-12 h-12 stroke-[#d0bcff] bg-[rgba(208,188,255,0.1)] rounded-full p-3 mx-auto group-hover:scale-110 group-hover:bg-[rgba(208,188,255,0.2)] transition-all duration-300" />
+                        <div className="absolute inset-0 bg-[#d0bcff] opacity-0 group-hover:opacity-10 blur-xl transition-opacity duration-300 rounded-full" />
+                    </div>
+                    <p className="font-bold text-lg leading-[156%] text-center text-[#e5e2e3] mt-4 mb-1 group-hover:text-white transition-colors">
                         Create New Board
                     </p>
-                    <p className="font-normal text-xs leading-[133%] text-center text-slate-500">
+                    <p className="font-normal text-xs leading-[133%] text-center text-slate-500 group-hover:text-slate-400 transition-colors">
                         Start a new creative journey
                     </p>
                 </div>

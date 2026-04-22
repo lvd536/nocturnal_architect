@@ -1,7 +1,7 @@
 "use server";
 
 import { getBoards } from "@/actions/supabase/board";
-import BoardCard from "@/components/App/Dashboard/Board";
+import BoardCard from "@/components/App/Dashboard/BoardCard";
 import CreateBoard from "@/components/App/Dashboard/CreateBoard";
 
 export default async function App() {
