@@ -30,6 +30,7 @@ export function RealtimeSync() {
     );
 
     useEffect(() => {
+        console.log("create channel");
         const channel = supabase
             .channel("db-changes")
             .on(
@@ -71,6 +72,7 @@ export function RealtimeSync() {
 
         return () => {
             supabase.removeChannel(channel);
+            console.log("remove channel");
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tasks]);
