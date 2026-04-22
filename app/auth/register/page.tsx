@@ -37,7 +37,7 @@ export default function Register() {
     };
 
     return (
-        <main className="flex flex-col items-center w-md h-fit max-w-md px-6 py-0 mx-auto mt-36">
+        <main className="flex flex-col items-center h-fit max-w-md px-2 sm:px-6 py-0 mx-auto mt-16">
             <svg
                 width="41"
                 height="51"
@@ -63,14 +63,14 @@ export default function Register() {
             <p className="font-normal text-sm leading-[143%] text-[#cbc3d7]">
                 Enter the collaborative void.
             </p>
-            <div className="border w-100 h-fitbackdrop-blur-xl bg-[rgba(42,42,43,0.6)] pt-10 pb-8 px-8 rounded-2xl border-solid border-[rgba(233,221,255,0.2)] mt-8">
+            <div className="border max-w-100 h-fitbackdrop-blur-xl bg-[rgba(42,42,43,0.6)] pt-10 pb-8 px-8 rounded-2xl border-solid border-[rgba(233,221,255,0.2)] mt-8">
                 <h3 className="font-bold text-xl leading-[140%] text-[#e5e2e3]">
                     Hello!
                 </h3>
                 <p className="font-normal text-sm leading-[143%] text-[#cbc3d7] mb-6">
                     Please enter your credentials to proceed.
                 </p>
-                <div className="grid grid-cols-2">
+                <div className="grid sm:grid-cols-2 gap-2">
                     <GoogleAuth />
                     <GitHubAuth />
                 </div>

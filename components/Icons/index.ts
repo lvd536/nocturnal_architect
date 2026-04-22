@@ -6,3 +6,5 @@ export { default as TaskRowsGraphic2 } from "./TaskRowsGraphic2";
 export { default as StatsBarsGraphic } from "./StatsBarsGraphic";
 export { default as WorkflowGraphic } from "./WorkflowGraphic";
 export { default as CollaborationBackground } from "./CollaborationBackground";
+export { default as GoogleLogo } from "./GoogleLogo";
+export { default as GitHubLogo } from "./GitHubLogo";
