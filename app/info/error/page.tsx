@@ -1,7 +1,12 @@
+import { InfoCard } from "@/components/InfoCard";
+import { AlertCircle } from "lucide-react";
+
 export default function ErrorPage() {
     return (
-        <div className="text-lg lg:text-2xl text-center">
-            Something went wrong... Try again later
-        </div>
+        <InfoCard
+            icon={AlertCircle}
+            title="Something went wrong"
+            description="An unexpected error occurred. Please try again later or contact our support team if the problem persists."
+        />
     );
 }
