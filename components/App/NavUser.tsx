@@ -1,6 +1,6 @@
 "use client";
 
-import { CircleDotDashed, LogOut, UserCircle, Settings } from "lucide-react";
+import { CircleDotDashed, LogOut, Settings } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -40,9 +40,6 @@ export function NavUser({
         router.refresh();
     };
 
-    const get2Digits = (str: string) =>
-        str.length > 0 ? str.slice(0, 2) : str;
-
     return (
         <SidebarMenu>
             <SidebarMenuItem>
@@ -50,73 +47,77 @@ export function NavUser({
                     <DropdownMenuTrigger asChild>
                         <SidebarMenuButton
                             size="lg"
-                            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                            className="data-[state=open]:bg-white/5 data-[state=open]:text-white transition-all duration-300"
                         >
-                            <Avatar className="h-8 w-8 rounded-lg grayscale">
+                            <Avatar className="h-8 w-8 rounded-lg">
                                 <AvatarImage
                                     src={user.avatar}
                                     alt={user.name}
                                 />
-                                <AvatarFallback className="rounded-lg uppercase text-xs">
-                                    {get2Digits(user.email) ||
-                                        get2Digits(user.name) ||
-                                        get2Digits(user.email) ||
-                                        "U"}
+                                <AvatarFallback className="rounded-lg bg-white/10 uppercase text-[10px] text-white/70">
+                                    {user.name.slice(0, 2)}
                                 </AvatarFallback>
                             </Avatar>
                             <div className="grid flex-1 text-left text-sm leading-tight">
-                                <span className="truncate font-medium">
+                                <span className="truncate font-semibold text-white/90">
                                     {user.name}
                                 </span>
-                                <span className="truncate text-xs text-muted-foreground">
+                                <span className="truncate text-xs text-white/40">
                                     {user.email}
                                 </span>
                             </div>
-                            <CircleDotDashed className="ml-auto size-4" />
+                            <CircleDotDashed className="ml-auto size-4 text-white/30" />
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>
+
                     <DropdownMenuContent
-                        className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+                        className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-2xl border border-white/10 bg-[rgba(30,29,32,0.8)] p-2 backdrop-blur-2xl shadow-2xl"
                         side={isMobile ? "bottom" : "right"}
                         align="end"
-                        sideOffset={4}
+                        sideOffset={8}
                     >
                         <DropdownMenuLabel className="p-0 font-normal">
-                            <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                                <Avatar className="h-8 w-8 rounded-lg">
+                            <div className="flex items-center gap-2 px-2 py-2">
+                                <Avatar className="h-9 w-9 rounded-lg">
                                     <AvatarImage
                                         src={user.avatar}
                                         alt={user.name}
                                     />
-                                    <AvatarFallback className="rounded-lg">
-                                        CN
+                                    <AvatarFallback className="rounded-lg bg-white/5 uppercase text-xs">
+                                        {user.name.slice(0, 2)}
                                     </AvatarFallback>
                                 </Avatar>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="truncate font-medium">
+                                    <span className="truncate font-semibold">
                                         {user.name}
                                     </span>
-                                    <span className="truncate text-xs text-muted-foreground">
+                                    <span className="truncate text-xs text-white/50">
                                         {user.email}
                                     </span>
                                 </div>
                             </div>
                         </DropdownMenuLabel>
-                        <DropdownMenuSeparator />
+
+                        <DropdownMenuSeparator className="bg-white/5 my-1" />
+
                         <DropdownMenuGroup>
-                            <DropdownMenuItem>
-                                <UserCircle />
-                                Account
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => router.push("/app/settings")}>
-                                <Settings />
-                                Settings
+                            <DropdownMenuItem
+                                onClick={() => router.push("/app/settings")}
+                                className="cursor-pointer gap-3 rounded-xl py-2.5 text-white/70 hover:bg-white/5 focus:bg-white/5"
+                            >
+                                <Settings size={16} />
+                                <span>Settings</span>
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={handleLogout}>
-                            <LogOut />
-                            Log out
+
+                        <DropdownMenuSeparator className="bg-white/5 my-1" />
+
+                        <DropdownMenuItem
+                            onClick={handleLogout}
+                            className="cursor-pointer gap-3 rounded-xl py-2.5 text-red-400/80 hover:bg-red-500/10 hover:text-red-400 focus:bg-red-500/10"
+                        >
+                            <LogOut size={16} />
+                            <span>Log out</span>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
