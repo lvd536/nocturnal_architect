@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
+import { Link } from "next-view-transitions";
 
 export function NavUser({
     user,
@@ -102,11 +103,13 @@ export function NavUser({
 
                         <DropdownMenuGroup>
                             <DropdownMenuItem
-                                onClick={() => router.push("/app/settings")}
                                 className="cursor-pointer gap-3 rounded-xl py-2.5 text-white/70 hover:bg-white/5 focus:bg-white/5"
+                                asChild
                             >
-                                <Settings size={16} />
-                                <span>Settings</span>
+                                <Link href="/app/settings">
+                                    <Settings size={16} />
+                                    <span>Settings</span>
+                                </Link>
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
 
