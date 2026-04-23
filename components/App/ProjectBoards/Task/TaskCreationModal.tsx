@@ -30,18 +30,22 @@ import { useRoleStore } from "@/store/roleStore";
 export default function TaskCreationModal({
     children,
 }: React.PropsWithChildren) {
+    const [open, setOpen] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>();
     const [date, setDate] = useState<Date | undefined>();
     const boardId = useBoardStore((s) => s.boardId);
     const { isEditor } = useRoleStore();
 
-    const handleSubmit = async (e: FormData) => {
-        if (!date || !boardId) return;
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (!date || !boardId || loading) return;
+        setLoading(true);
 
-        const { title, x, y } = {
-            title: (e.get("task-title") as string) || "",
-            x: (e.get("task-x") || 0) as number,
-            y: (e.get("task-y") || 0) as number,
-        };
+        const formData = new FormData(e.currentTarget);
+
+        const title = (formData.get("task-title") as string) || "";
+        const x = Number(formData.get("task-x")) || 0;
+        const y = Number(formData.get("task-y")) || 0;
 
         const newTask: Omit<Task, "id" | "done_in"> = {
             title,
@@ -54,13 +58,20 @@ export default function TaskCreationModal({
             todos: [],
         };
 
-        await createTask(boardId, newTask);
+        try {
+            await createTask(boardId, newTask);
+            setOpen(false);
+        } catch (error) {
+            console.error("Error creating task:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     if (!isEditor) return null;
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 {children ? (
                     children
@@ -72,7 +83,7 @@ export default function TaskCreationModal({
                 )}
             </DialogTrigger>
             <DialogContent className="border backdrop-blur-xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] bg-[rgba(53,52,54,0.6)] p-6 rounded-3xl border-solid border-[rgba(73,68,84,0.2)]">
-                <form action={handleSubmit}>
+                <form onSubmit={handleSubmit}>
                     <DialogHeader className="relative">
                         <DialogTitle className="flex items-center gap-3">
                             <div className="flex items-center justify-center border w-10 h-10 bg-[#2a2a2b] rounded-xl border-solid border-[rgba(73,68,84,0.2)]">
@@ -179,6 +190,7 @@ export default function TaskCreationModal({
                             </Button>
                         </DialogClose>
                         <Button
+                            disabled={loading}
                             className="w-42.25 h-11 hover:shadow-[0_4px_6px_-4px_rgba(208,188,255,0.2),0_10px_15px_-3px_rgba(208,188,255,0.2)] bg-[#d0bcff] border-none rounded-xl font-bold text-sm leading-[143%] tracking-[0.02em] text-center text-[#340080]"
                             type="submit"
                         >
