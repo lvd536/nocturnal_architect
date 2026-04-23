@@ -28,26 +28,42 @@ import {
 export default function TagCreationModal({
     children,
 }: React.PropsWithChildren) {
-    const [bgColor, setBgColor] = useState("#fff");
-    const [textColor, setTextColor] = useState("#000");
+    const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [bgColor, setBgColor] = useState("#d0bcff");
+    const [textColor, setTextColor] = useState("#340080");
     const boardId = useBoardStore((s) => s.boardId);
 
-    const handleSubmit = async (e: FormData) => {
-        const label = e.get("tag-label");
-        if (!boardId || !label) return;
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (!boardId || loading) return;
+
+        const formData = new FormData(e.currentTarget);
+        const label = formData.get("tag-label") as string;
+
+        if (!label) return;
+
+        setLoading(true);
 
         const newTag: Omit<Tag, "id" | "created_at"> = {
-            label: String(label),
+            label,
             board_id: boardId,
             bg: bgColor,
             text_color: textColor,
         };
 
-        await createTag(newTag);
+        try {
+            await createTag(newTag);
+            setOpen(false);
+        } catch (error) {
+            console.error("Error creating tag:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 {children ? (
                     children
@@ -59,7 +75,7 @@ export default function TagCreationModal({
                 )}
             </DialogTrigger>
             <DialogContent className="border backdrop-blur-xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] bg-[rgba(53,52,54,0.6)] p-6 rounded-3xl border-solid border-[rgba(73,68,84,0.2)]">
-                <form action={handleSubmit}>
+                <form onSubmit={handleSubmit}>
                     <DialogHeader className="relative">
                         <DialogTitle className="flex items-center gap-3">
                             <div className="flex items-center justify-center border w-10 h-10 bg-[#2a2a2b] rounded-xl border-solid border-[rgba(73,68,84,0.2)]">
@@ -206,6 +222,7 @@ export default function TagCreationModal({
                             </Button>
                         </DialogClose>
                         <Button
+                            disabled={loading}
                             className="w-42.25 h-11 hover:shadow-[0_4px_6px_-4px_rgba(208,188,255,0.2),0_10px_15px_-3px_rgba(208,188,255,0.2)] bg-[#d0bcff] border-none rounded-xl font-bold text-sm leading-[143%] tracking-[0.02em] text-center text-[#340080]"
                             type="submit"
                         >
