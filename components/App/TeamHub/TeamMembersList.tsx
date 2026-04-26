@@ -1,11 +1,32 @@
 "use client";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBoardMembers } from "@/hooks/useBoardMembers";
+import { TeamMember } from "./TeamMember";
+import { kickUser, updateUserRole } from "@/actions/supabase/board";
+import { useRouter } from "next/navigation";
+import useRemoteUser from "@/hooks/useRemoteUser";
 
 export default function TeamMembersList() {
     const { members, loading, error } = useBoardMembers();
+    const { user, loading: userLoading, error: userError } = useRemoteUser();
+    const router = useRouter();
 
-    if (loading)
+    const handleKick = async (id: string) => {
+        const { error } = await kickUser(id);
+
+        if (error) router.push("/info/error");
+    };
+
+    const handleUpdate = async (
+        id: string,
+        role: "owner" | "editor" | "viewer",
+    ) => {
+        const { error } = await updateUserRole(id, role);
+
+        if (error) router.push("/info/error");
+    };
+
+    if (loading || userLoading)
         return (
             <div className="flex w-full gap-4 items-stretch flex-wrap">
                 {[1, 2, 3].map((i) => (
@@ -35,7 +56,7 @@ export default function TeamMembersList() {
             </div>
         );
 
-    if (error)
+    if (error || userError)
         return (
             <div className="w-full text-center text-foreground/80 text-xl">
                 {error}
@@ -46,47 +67,13 @@ export default function TeamMembersList() {
         <ul className="flex gap-4 items-stretch flex-wrap">
             {members && members.length > 0 ? (
                 members.map((member) => (
-                    <li
-                        className="relative overflow-hidden flex flex-col gap-4 border backdrop-blur-xl bg-[#1a191b]/60 p-5 rounded-2xl border-white/5 transition-all hover:border-white/10"
+                    <TeamMember
                         key={member.id}
-                    >
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(208,188,255,0.08)_0%,transparent_70%)] pointer-events-none" />
-
-                        <div className="relative flex items-center justify-between gap-4">
-                            <div className="min-w-0 flex-1">
-                                <h3 className="font-bold text-lg text-[#e5e2e3] truncate">
-                                    {member.profiles.display_name}
-                                </h3>
-                                <p className="font-medium text-xs text-zinc-400 mt-0.5">
-                                    {member.profiles.company_name ||
-                                        "No company"}
-                                </p>
-                            </div>
-
-                            <div className="h-12 w-12 shrink-0 flex items-center justify-center rounded-xl bg-linear-to-br from-[#d0bcff]/20 to-[#d0bcff]/5 border border-[#d0bcff]/10 text-[#d0bcff] font-bold text-sm tracking-tighter shadow-inner">
-                                {member.profiles.display_name
-                                    .slice(0, 2)
-                                    .toUpperCase()}
-                            </div>
-                        </div>
-
-                        <p className="relative font-normal text-sm leading-relaxed text-zinc-500 line-clamp-2 min-h-10">
-                            {member.profiles.bio ||
-                                "No bio description provided yet."}
-                        </p>
-
-                        <div className="relative pt-2 mt-auto flex items-center justify-between border-t border-white/3">
-                            <span className="bg-[#d0bcff]/10 font-bold text-[10px] tracking-widest uppercase text-[#d0bcff] px-2.5 py-1 rounded-lg border border-[#d0bcff]/5">
-                                {member.role}
-                            </span>
-
-                            <span className="text-[10px] text-zinc-600">
-                                {new Date(
-                                    member.created_at,
-                                ).toLocaleDateString()}
-                            </span>
-                        </div>
-                    </li>
+                        member={member}
+                        onKick={handleKick}
+                        onUpdateRole={handleUpdate}
+                        isCurrentUser={user?.id === member.user_id}
+                    />
                 ))
             ) : (
                 <li>Members is empty</li>

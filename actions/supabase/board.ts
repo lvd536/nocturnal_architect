@@ -481,3 +481,33 @@ export async function deleteBoard(boardId: string) {
 
     return { error };
 }
+
+export async function kickUser(memberId: string) {
+    const supabase = await createClient();
+
+    const { error } = await supabase
+        .from("board_members")
+        .delete()
+        .eq("id", memberId);
+
+    if (!error) revalidatePath("/app");
+
+    return { error };
+}
+export async function updateUserRole(
+    memberId: string,
+    role: "owner" | "editor" | "viewer",
+) {
+    const supabase = await createClient();
+
+    const { error } = await supabase
+        .from("board_members")
+        .update({
+            role: role,
+        })
+        .eq("id", memberId);
+
+    if (!error) revalidatePath("/app");
+
+    return { error };
+}
