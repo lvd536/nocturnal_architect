@@ -13,7 +13,7 @@ export default function BoardMenu() {
     if (!isEditor) return null;
 
     return (
-        <div className="flex items-center justify-between gap-2 absolute bottom-6 right-0 left-0 mx-auto w-fit min-w-50 h-15 backdrop-blur-xl shadow-[0_10px_50px_0_rgba(0,0,0,0.5)] bg-[rgba(28,27,28,0.6)] rounded-full px-2">
+        <div className="flex items-center justify-between gap-2 absolute bottom-6 right-0 left-0 mx-auto w-fit h-15 backdrop-blur-xl shadow-[0_10px_50px_0_rgba(0,0,0,0.5)] bg-[rgba(28,27,28,0.6)] rounded-full px-2">
             <TaskCreationModal>
                 <Button
                     variant="ghost"
