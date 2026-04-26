@@ -8,3 +8,6 @@ export { default as WorkflowGraphic } from "./WorkflowGraphic";
 export { default as CollaborationBackground } from "./CollaborationBackground";
 export { default as GoogleLogo } from "./GoogleLogo";
 export { default as GitHubLogo } from "./GitHubLogo";
+export { default as ModalCheckMark } from "./ModalCheckMark";
+export { default as AuthLogo } from "./AuthLogo";
+export { default as StatsCompletionRate } from "./StatsCompletionRate";
