@@ -67,19 +67,21 @@ export default function BoardStatus() {
 
             <div className="my-3 h-px w-full bg-linear-to-r from-transparent via-white/10 to-transparent" />
 
-            <div className="flex items-center justify-between">
-                <span className="text-[10px] text-emerald-400 font-medium bg-emerald-500/10 px-2 py-0.5 rounded">
-                    {isOwner ? "Owner" : isEditor ? "Editor" : "Viewer"}
-                </span>
-                {boardId && isOwner && (
-                    <button
-                        onClick={() => setIsDeleteModalOpen(true)}
-                        className="text-white/30 hover:text-red-400 transition-colors"
-                    >
-                        <Trash2 size={14} />
-                    </button>
-                )}
-            </div>
+            {boardId && (
+                <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-emerald-400 font-medium bg-emerald-500/10 px-2 py-0.5 rounded">
+                        {isOwner ? "Owner" : isEditor ? "Editor" : "Viewer"}
+                    </span>
+                    {isOwner && (
+                        <button
+                            onClick={() => setIsDeleteModalOpen(true)}
+                            className="text-white/30 hover:text-red-400 transition-colors"
+                        >
+                            <Trash2 size={14} />
+                        </button>
+                    )}
+                </div>
+            )}
 
             {isDeleteModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
