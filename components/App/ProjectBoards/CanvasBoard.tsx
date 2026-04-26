@@ -20,6 +20,7 @@ import { useShallow } from "zustand/react/shallow";
 import BoardMenu from "./BoardMenu";
 import { useAllTasksTags } from "@/hooks/useAllTasksTags";
 import { useIsEditor } from "@/hooks/useIsEditor";
+import { useRoleStore } from "@/store/roleStore";
 
 export default function CanvasBoard() {
     const canvasScrollRef = useRef<HTMLDivElement | null>(null);
@@ -39,7 +40,7 @@ export default function CanvasBoard() {
             })),
         );
 
-    const { isEditor } = useIsEditor(path.id ? (path.id as string) : boardId);
+    const { isEditor } = useRoleStore();
 
     const { isPanning, panHandlers } = useCanvasPan({
         containerRef: canvasScrollRef,
