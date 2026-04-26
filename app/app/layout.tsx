@@ -1,7 +1,7 @@
 "use server";
 
-import { AppSidebar } from "@/components/App/AppSidebar";
-import { SiteHeader } from "@/components/App/SiteHeader";
+import { AppSidebar } from "@/components/App/Navigation/AppSidebar";
+import { SiteHeader } from "@/components/App/Navigation/SiteHeader";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { createClient } from "@/utils/supabase/server";

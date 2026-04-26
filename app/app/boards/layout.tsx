@@ -29,8 +29,8 @@ export default function BoardLayout({
     );
 
     useEffect(() => {
-        setEditor(isEditor);
-        setOwner(isOwner);
+        setEditor(!!isEditor);
+        setOwner(!!isOwner);
     }, [isEditor, isOwner, setEditor, setOwner]);
 
     return <>{children}</>;

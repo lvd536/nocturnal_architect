@@ -459,7 +459,7 @@ export async function checkIsEditor(boardId: string) {
     });
 
     if (error) return { error };
-    console.log(data);
+
     return !!data as boolean;
 }
 
@@ -472,4 +472,12 @@ export async function checkIsOwner(boardId: string) {
 
     if (error) return { error };
     return !!data as boolean;
+}
+
+export async function deleteBoard(boardId: string) {
+    const supabase = await createClient();
+
+    const { error } = await supabase.from("boards").delete().eq("id", boardId);
+
+    return { error };
 }
