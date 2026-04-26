@@ -116,7 +116,7 @@ export default function CalendarBoard() {
         selectedDate === new Date().toISOString().split("T")[0];
 
     return (
-        <div className="min-h-screen bg-[#141414] text-white flex flex-col p-4 lg:p-6 font-sans">
+        <div className="min-h-screen bg-[#141414] text-white flex flex-col lg:p-6 font-sans">
             <header className="flex items-center justify-between mb-8 px-2">
                 <div className="flex items-center gap-6">
                     <h1 className="text-3xl font-semibold tracking-tight">
@@ -133,8 +133,8 @@ export default function CalendarBoard() {
                 <TaskCreationModal />
             </header>
 
-            <div className="flex-1 flex flex-col lg:flex-row gap-6 min-h-0">
-                <div className="flex-1 bg-[#1A1A1A] rounded-2xl p-4 shadow-2xl border border-white/2 overflow-hidden">
+            <div className="flex-1 w-full grid lg:grid-cols-2 gap-6 min-h-0">
+                <div className="flex-1 bg-[#1A1A1A] max-lg:min-h-[80vh] rounded-2xl p-4 shadow-2xl border border-white/2 overflow-hidden">
                     <FullCalendar
                         ref={calendarRef}
                         plugins={[dayGridPlugin, interactionPlugin]}
