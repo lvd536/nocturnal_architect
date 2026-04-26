@@ -1,4 +1,5 @@
 "use client";
+import { LoadingScreen } from "@/components/LoadingScreen";
 import { useIsEditor } from "@/hooks/useIsEditor";
 import { useIsOwner } from "@/hooks/useIsOwner";
 import { useBoardStore } from "@/store/boardStore";
@@ -12,14 +13,18 @@ export default function BoardLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const boardId = useBoardStore((s) => s.boardId);
+    const { boardId, isLoading } = useBoardStore(
+        useShallow((s) => ({
+            boardId: s.boardId,
+            isLoading: s.isLoading,
+        })),
+    );
     const params = useParams();
-    const { isEditor } = useIsEditor(
-        params.id ? (params.id as string) : boardId || null,
-    );
-    const { isOwner } = useIsOwner(
-        params.id ? (params.id as string) : boardId || null,
-    );
+    const id = params.id ? (params.id as string) : boardId || null;
+
+    const { isEditor, loading: editorLoading } = useIsEditor(id);
+    const { isOwner, loading: ownerLoading } = useIsOwner(id);
+    const loading = isLoading || editorLoading || ownerLoading;
 
     const { setOwner, setEditor } = useRoleStore(
         useShallow((s) => ({
@@ -31,7 +36,12 @@ export default function BoardLayout({
     useEffect(() => {
         setEditor(!!isEditor);
         setOwner(!!isOwner);
-    }, [isEditor, isOwner, setEditor, setOwner]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isEditor, isOwner]);
 
-    return <>{children}</>;
+    return (
+        <>
+            {loading && <LoadingScreen />} {children}
+        </>
+    );
 }

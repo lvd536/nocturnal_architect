@@ -19,7 +19,6 @@ import { useParams } from "next/navigation";
 import { useShallow } from "zustand/react/shallow";
 import BoardMenu from "./BoardMenu";
 import { useAllTasksTags } from "@/hooks/useAllTasksTags";
-import { useIsEditor } from "@/hooks/useIsEditor";
 import { useRoleStore } from "@/store/roleStore";
 
 export default function CanvasBoard() {
